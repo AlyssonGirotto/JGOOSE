@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns="http://www.daa.com.au/~james/dia-shape-ns" xmlns:svg="http://www.w3.org/2000/svg">
+  <name>Position</name>
+  <icon>position.png</icon>
+  <connections>
+    <point x="2.65" y="3.95"/>
+    <point x="2.65" y="1.15"/>
+    <point x="1.25" y="2.55"/>
+    <point x="4.05" y="2.55"/>
+    <point x="1.43756" y="1.85"/>
+    <point x="3.86244" y="1.85"/>
+    <point x="2.65" y="1.85"/>
+    <point x="1.43756" y="3.25"/>
+    <point x="3.86244" y="3.25"/>
+    <point x="2.65" y="3.25"/>
+  </connections>
+  <aspectratio type="fixed"/>
+  <svg:svg>
+<svg:path  stroke-linejoin="miter" d="m259.36,324.21c-7.7452,0-14.596,4.4285-18.79,11.221-7.0107,3.6516-11.532,9.2898-11.532,15.629,0,6.3401,4.5188,11.99,11.532,15.641,4.1946,6.786,11.049,11.208,18.79,11.208,7.7364,0,14.576-4.4166,18.772-11.196,7.0248-3.6512,11.532-9.3074,11.532-15.654,0-6.3451-4.5092-11.99-11.532-15.641-4.1947-6.785-11.031-11.208-18.772-11.208z"  stroke="#000000" stroke-linecap="butt" stroke-width="0.48916814px" style="fill:#FFFFFF"	 />
+   <svg:text style="fill: #000000; text-anchor:middle; font-family: sans; font-style: normal; font-weight: normal" x="2.65" y="2.72" font-size="0.7" textLength="0"></svg:text>
+  </svg:svg>
+</shape>

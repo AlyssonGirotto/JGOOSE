@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<istarml>
+    <diagram name="imported from .tel i* file">
+        <ielement id="Element_5" name="i* Softgoal 5" type="softgoal">
+            <dependency>
+                <depender aref="Element_2"/>
+                <dependee aref="Element_0"/>
+            </dependency>
+        </ielement>
+        <ielement id="Element_4" name="i* Goal 4" type="goal">
+            <dependency>
+                <depender aref="Element_2"/>
+                <dependee aref="Element_0"/>
+            </dependency>
+        </ielement>
+        <ielement id="Element_3" name="i* Task 3" type="task">
+            <dependency>
+                <depender aref="Element_0"/>
+                <dependee aref="Element_2"/>
+            </dependency>
+        </ielement>
+        <ielement id="Element_1" name="i* Resource 1" type="resource">
+            <dependency>
+                <depender aref="Element_0"/>
+                <dependee aref="Element_2"/>
+            </dependency>
+        </ielement>
+        <actor id="Element_2" name="i* Actor 2"/>
+        <actor id="Element_0" name="i* Actor 0"/>
+    </diagram>
+</istarml>

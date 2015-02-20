@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns="http://www.daa.com.au/~james/dia-shape-ns" xmlns:svg="http://www.w3.org/2000/svg">
+  <name>Task</name>
+  <icon>task.png</icon>
+  <connections>
+    <point x="1.45" y="2.55"/>
+    <point x="2.2" y="1.8"/>
+    <point x="3.7" y="1.8"/>
+    <point x="4.45" y="2.55"/>
+    <point x="3.7" y="3.3"/>
+    <point x="2.2" y="3.3"/>
+    <point x="1.825" y="2.175"/>
+    <point x="2.95" y="1.8"/>
+    <point x="4.075" y="2.175"/>
+    <point x="4.075" y="2.925"/>
+    <point x="2.95" y="3.3"/>
+  </connections>
+  <aspectratio type="fixed"/>
+  <svg:svg>
+    <svg:polygon style="fill: #ffffff" points="1.45,2.55 2.2,1.8 3.7,1.8 4.45,2.55 3.7,3.3 2.2,3.3 "/>
+    <svg:polygon style="fill: none; fill-opacity:0; stroke-width: 0.12; stroke: #000000" points="1.45,2.55 2.2,1.8 3.7,1.8 4.45,2.55 3.7,3.3 2.2,3.3 "/>
+    <svg:text style="fill: #000000; text-anchor:middle; font-family: sans; font-style: normal; font-weight: normal" x="2.95" y="2.72" font-size="0.7" textLength="0"></svg:text>
+  </svg:svg>
+</shape>

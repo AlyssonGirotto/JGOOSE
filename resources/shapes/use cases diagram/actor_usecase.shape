@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns="http://www.daa.com.au/~james/dia-shape-ns" xmlns:svg="http://www.w3.org/2000/svg">
+  <name>Actor Use Case</name>
+  <icon>actor_usecase.png</icon>
+  <connections>
+    <point x="-3.22777" y="-6.36842"/>
+    <point x="-3.22777" y="-6.96842"/>
+    <point x="-3.52777" y="-6.66842"/>
+    <point x="-2.92777" y="-6.66842"/>
+    <point x="-4.42777" y="-6.06842"/>
+    <point x="-2.02777" y="-6.06842"/>
+    <point x="-3.22777" y="-6.06842"/>
+    <point x="-3.22777" y="-6.36842"/>
+    <point x="-3.22777" y="-4.86842"/>
+    <point x="-3.22777" y="-5.61842"/>
+    <point x="-3.22777" y="-4.86842"/>
+    <point x="-4.42777" y="-3.56842"/>
+    <point x="-3.82777" y="-4.21842"/>
+    <point x="-3.22777" y="-4.86842"/>
+    <point x="-2.02777" y="-3.56842"/>
+    <point x="-2.62777" y="-4.21842"/>
+  </connections>
+  <aspectratio type="fixed"/>
+  <svg:svg>
+    <svg:ellipse style="fill: #ffffff" cx="-3.22777" cy="-6.66842" rx="0.3" ry="0.3"/>
+    <svg:ellipse style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" cx="-3.22777" cy="-6.66842" rx="0.3" ry="0.3"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="-4.42777" y1="-6.06842" x2="-2.02777" y2="-6.06842"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="-3.22777" y1="-6.36842" x2="-3.22777" y2="-4.86842"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="-3.22777" y1="-4.86842" x2="-4.42777" y2="-3.56842"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="-3.22777" y1="-4.86842" x2="-2.02777" y2="-3.56842"/>
+    <svg:text style="fill: #000000; text-anchor:middle; font-family: sans; font-style: normal; font-weight: normal" x="-3.22777" y="-2.32842" font-size="0.8" textLength="1.185">Actor</svg:text>
+  </svg:svg>
+</shape>
