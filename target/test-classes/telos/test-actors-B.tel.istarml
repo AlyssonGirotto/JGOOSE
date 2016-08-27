@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<istarml>
+    <diagram name="imported from .tel i* file">
+        <actor id="Element_7" name="i* Position 7" type="position"/>
+        <actor id="Element_6" name="i* Role 6" type="role"/>
+        <actor id="Element_5" name="i* Agent 5" type="agent"/>
+        <actor id="Element_4" name="i* Actor 4"/>
+        <actor id="Element_3" name="i* Actor 3"/>
+        <actor id="Element_2" name="i* Actor 2"/>
+        <actor id="Element_1" name="i* Actor 1"/>
+        <actor id="Element_0" name="i* Actor 0"/>
+    </diagram>
+</istarml>

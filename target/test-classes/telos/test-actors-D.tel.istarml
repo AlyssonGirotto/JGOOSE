@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<istarml>
+    <diagram name="imported from .tel i* file">
+        <actor id="Element_4" name="i* Position 4" type="position">
+            <actorLink type="instance_of" aref="Element_0"/>
+            <actorLink type="covers" aref="Element_2"/>
+        </actor>
+        <actor id="Element_2" name="i* Role 2" type="role">
+            <actorLink type="instance_of" aref="Element_0"/>
+        </actor>
+        <actor id="Element_1" name="i* Agent 1" type="agent">
+            <actorLink type="instance_of" aref="Element_0"/>
+            <actorLink type="occupies" aref="Element_4"/>
+            <actorLink type="plays" aref="Element_2"/>
+        </actor>
+        <actor id="Element_0" name="i* Actor 0"/>
+    </diagram>
+</istarml>

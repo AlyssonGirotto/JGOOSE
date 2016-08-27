@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns="http://www.daa.com.au/~james/dia-shape-ns" xmlns:svg="http://www.w3.org/2000/svg">
+  <name>Actor Use Case</name>
+  <icon>actor_usecase.png</icon>
+  <connections>
+    <point x="5.55" y="10.3"/>
+    <point x="5.55" y="9.7"/>
+    <point x="5.25" y="10"/>
+    <point x="5.85" y="10"/>
+    <point x="4.35" y="10.6"/>
+    <point x="6.75" y="10.6"/>
+    <point x="5.55" y="10.6"/>
+    <point x="5.55" y="10.3"/>
+    <point x="5.55" y="11.8"/>
+    <point x="5.55" y="11.05"/>
+    <point x="5.55" y="11.8"/>
+    <point x="4.35" y="13.1"/>
+    <point x="4.95" y="12.45"/>
+    <point x="5.55" y="11.8"/>
+    <point x="6.75" y="13.1"/>
+    <point x="6.15" y="12.45"/>
+  </connections>
+  <aspectratio type="fixed"/>
+  <svg:svg>
+    <svg:ellipse style="fill: #ffffff" cx="5.55" cy="10" rx="0.3" ry="0.3"/>
+    <svg:ellipse style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" cx="5.55" cy="10" rx="0.3" ry="0.3"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="4.35" y1="10.6" x2="6.75" y2="10.6"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="5.55" y1="10.3" x2="5.55" y2="11.8"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="5.55" y1="11.8" x2="4.35" y2="13.1"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="5.55" y1="11.8" x2="6.75" y2="13.1"/>
+    <svg:text style="fill: #000000; text-anchor:start; font-family: sans; font-style: normal; font-weight: normal" x="5.55" y="14.34" font-size="0.8" textLength="1.185"></svg:text>
+  </svg:svg>
+</shape>

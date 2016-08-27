@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns="http://www.daa.com.au/~james/dia-shape-ns" xmlns:svg="http://www.w3.org/2000/svg">
+  <name>Use Case</name>
+  <icon>usecase.png</icon>
+  <connections>
+    <point x="3.7" y="4.05336"/>
+    <point x="3.7" y="2.34664"/>
+    <point x="1.99327" y="3.2"/>
+    <point x="5.40673" y="3.2"/>
+  </connections>
+  <aspectratio type="fixed"/>
+  <svg:svg>
+    <svg:ellipse style="fill: #ffffff" cx="3.7" cy="3.2" rx="1.70673" ry="0.853364"/>
+    <svg:ellipse style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" cx="3.7" cy="3.2" rx="1.70673" ry="0.853364"/>
+    <svg:text style="fill: #000000; text-anchor:middle; font-family: sans; font-style: normal; font-weight: normal" x="3.7" y="3.44" font-size="0.8" textLength="0"></svg:text>
+  </svg:svg>
+</shape>

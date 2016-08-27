@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<istarml>
+    <diagram name="imported from .tel i* file">
+        <actor id="Element_1" name="i* Agent 1" type="agent"/>
+    </diagram>
+</istarml>

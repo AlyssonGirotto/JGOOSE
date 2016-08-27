@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><istarml version="1.0"><diagram id="" name="Exported from E4J"><actor id="3" name="Actor" type="actor"/><actor id="2" name="Actor" type="actor"/><ielement id="4" name="Goal" type="goal"><dependency><depender aref="2"/><dependee aref="3"/></dependency></ielement></diagram></istarml>

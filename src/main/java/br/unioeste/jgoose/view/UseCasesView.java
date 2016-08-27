@@ -622,7 +622,7 @@ public class UseCasesView extends javax.swing.JFrame {
             this.addWindowListener(windowListener);
         }
         mxGraph graph = generateDiagram();
-        ((BasicUseCasesEditor) e4jInstace.getEditor()).getGraphComponent().setGraph(graph);
+//        ((BasicUseCasesEditor) e4jInstace.getEditor()).getGraphComponent().setGraph(graph);
         // chama a rotina de mapeamento para geração do diagrama de casos de uso
 //        try {
 //            ((BasicUseCasesEditor) e4jInstace.getEditor()).generateDiagram();
@@ -637,7 +637,7 @@ public class UseCasesView extends javax.swing.JFrame {
         ArrayList<Actor> useCases = Controller.getUseCases();
         ArrayList<ActorISA> isas = Controller.getIsas();
         // comeca a atualizar o grafo
-        mxGraph graph = new mxGraph();
+        mxGraph graph = ((BasicUseCasesEditor) e4jInstace.getEditor()).getGraphComponent().getGraph();
         graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
         graph.removeCells(graph.getChildEdges(graph.getDefaultParent()));
         graph.getModel().beginUpdate();
@@ -672,9 +672,11 @@ public class UseCasesView extends javax.swing.JFrame {
             geo = new mxGeometry(50, yActor, 80, 80);
             geo.setX(50);
             geo.setY(yActor);
-            actors.put(actor.getCod(), new mxCell(value, geo, styleActor));
-            actors.get(actor.getCod()).setVertex(true);
-            graph.addCell(actors.get(actor.getCod()));
+            mxCell cell = new mxCell(value, geo, styleActor);
+            cell.setVertex(true);
+            System.out.println("" + cell.getStyle());
+            actors.put(actor.getCod(), cell);
+            graph.addCell(cell);
             // cria os casos de uso e arestas
             for (UseCase caso : actor.getUseCases()) {
                 // cria caso de uso, sua geometria e estilo
@@ -785,7 +787,7 @@ public class UseCasesView extends javax.swing.JFrame {
                 aresta.setTarget(actors.get(isa.getCod()));
                 aresta.setValue(value);
                 aresta.setStyle("straight;noLabel=1;endArrow=block;endFill=0;endSize=14;shape=curvedEdge;edgeStyle=curvedEdgeStyle");
-                graph.addCell(aresta);   
+                graph.addCell(aresta);
             }
         }
         graph.getModel().endUpdate();

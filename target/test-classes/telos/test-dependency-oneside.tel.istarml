@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<istarml>
+    <diagram name="imported from .tel i* file">
+        <ielement id="Element_1" name="i* Resource 1" type="resource">
+            <dependency>
+                <depender aref="Element_0"/>
+            </dependency>
+        </ielement>
+        <actor id="Element_0" name="i* Actor 0"/>
+    </diagram>
+</istarml>

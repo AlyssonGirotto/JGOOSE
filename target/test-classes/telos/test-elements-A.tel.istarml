@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<istarml>
+    <diagram name="imported from .tel i* file">
+        <ielement id="Element_4" name="i* Resource 4" type="resource"/>
+        <ielement id="Element_3" name="i* Softgoal 3" type="softgoal"/>
+        <ielement id="Element_2" name="i* Goal 2" type="goal"/>
+        <ielement id="Element_1" name="i* Task 1" type="task"/>
+        <ielement id="Element_0" name="i* Resource 0" type="resource"/>
+    </diagram>
+</istarml>
