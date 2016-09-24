@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: br.unioeste.jgoose.istarml.TelosTest
 -------------------------------------------------------------------------------
-Tests run: 55, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 0.323 sec
+Tests run: 55, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 1.513 sec

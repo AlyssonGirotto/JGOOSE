@@ -649,6 +649,7 @@ public class GraphEditor extends BasicGraphEditor
 		{
 		                  System.out.println("source: " + source);
 		                  System.out.println("target: " + target);
+		                  System.out.println("value: " + value);
                     
                     if (edgeTemplate != null)
 			{
