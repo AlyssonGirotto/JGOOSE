@@ -1,8 +1,11 @@
 package br.unioeste.jgoose.view;
 
+import br.unioeste.jgoose.BP2UC.GraphEditor;
+import br.unioeste.jgoose.BP2UC.HelloWorld;
 import br.unioeste.jgoose.controller.Controller;
 import br.unioeste.jgoose.controller.EditorWindowListener;
 import br.unioeste.jgoose.controller.ImportIStarGraph;
+import br.unioeste.jgoose.e4j.swing.BasicBPMNEditor;
 import br.unioeste.jgoose.e4j.swing.BasicIStarEditor;
 import br.unioeste.jgoose.e4j.swing.BasicUseCasesEditor;
 import br.unioeste.jgoose.e4j.swing.EditorJFrame;
@@ -20,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -39,7 +43,8 @@ public class MainView extends javax.swing.JFrame {
     private static final Logger LOG = Logger.getLogger("console");
     private EditorJFrame E4JiStar = null;
     private EditorJFrame E4JUseCases = null;
-
+    private EditorJFrame E4JBPMN = null;
+    
     /**
      * Creates new form MainView
      */
@@ -97,13 +102,16 @@ public class MainView extends javax.swing.JFrame {
             }
         };
         buttonOpenE4JiStar = new javax.swing.JButton();
-        buttunMappingUseCases = new javax.swing.JButton();
+        buttonBPMNToUseCases = new javax.swing.JButton();
         buttonOpenTelosFile = new javax.swing.JButton();
         buttonOpenE4JUseCases = new javax.swing.JButton();
+        buttonOpenE4JBPMN = new javax.swing.JButton();
+        buttunMappingUseCases = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         fileOpenTelosFile = new javax.swing.JMenuItem();
         menuTools = new javax.swing.JMenu();
+        toolsOpenE4JBPMNEditor = new javax.swing.JMenuItem();
         toolsOpenE4JEditor = new javax.swing.JMenuItem();
         toolsOpenE4JUCEditor = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
@@ -139,9 +147,11 @@ public class MainView extends javax.swing.JFrame {
             }
         ));
         atoresMapeados.setViewportView(tableActors);
-        tableActors.getColumnModel().getColumn(0).setMaxWidth(35);
-        tableActors.getColumnModel().getColumn(1).setMaxWidth(100);
-        tableActors.getColumnModel().getColumn(3).setMaxWidth(70);
+        if (tableActors.getColumnModel().getColumnCount() > 0) {
+            tableActors.getColumnModel().getColumn(0).setMaxWidth(35);
+            tableActors.getColumnModel().getColumn(1).setMaxWidth(100);
+            tableActors.getColumnModel().getColumn(3).setMaxWidth(70);
+        }
 
         tabsMenu.addTab("Actors i* Mapped", atoresMapeados);
 
@@ -155,8 +165,10 @@ public class MainView extends javax.swing.JFrame {
             }
         ));
         elementosMapeados.setViewportView(tableElements);
-        tableElements.getColumnModel().getColumn(0).setMaxWidth(35);
-        tableElements.getColumnModel().getColumn(1).setMaxWidth(100);
+        if (tableElements.getColumnModel().getColumnCount() > 0) {
+            tableElements.getColumnModel().getColumn(0).setMaxWidth(35);
+            tableElements.getColumnModel().getColumn(1).setMaxWidth(100);
+        }
 
         tabsMenu.addTab("Elements i* Mapped", elementosMapeados);
 
@@ -170,7 +182,9 @@ public class MainView extends javax.swing.JFrame {
             }
         ));
         linksMapeados.setViewportView(tableLinks);
-        tableLinks.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (tableLinks.getColumnModel().getColumnCount() > 0) {
+            tableLinks.getColumnModel().getColumn(0).setMaxWidth(50);
+        }
 
         tabsMenu.addTab("Links i* Mapped", linksMapeados);
 
@@ -183,13 +197,13 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
-        buttunMappingUseCases.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        buttunMappingUseCases.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/usecases_32x32.png"))); // NOI18N
-        buttunMappingUseCases.setText("Mapping Use Cases UML");
-        buttunMappingUseCases.setToolTipText("Mapear Casos de Uso UML");
-        buttunMappingUseCases.addActionListener(new java.awt.event.ActionListener() {
+        buttonBPMNToUseCases.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonBPMNToUseCases.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/usecases_32x32.png"))); // NOI18N
+        buttonBPMNToUseCases.setText("BPMN to Use Cases");
+        buttonBPMNToUseCases.setToolTipText("Derivar Casos de Uso a partir de BPMN");
+        buttonBPMNToUseCases.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttunMappingUseCasesActionPerformed(evt);
+                buttonBPMNToUseCasesActionPerformed(evt);
             }
         });
 
@@ -212,6 +226,25 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
+        buttonOpenE4JBPMN.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonOpenE4JBPMN.setText("E4J BPMN");
+        buttonOpenE4JBPMN.setToolTipText("Abrir Arquivo Telos");
+        buttonOpenE4JBPMN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOpenE4JBPMNActionPerformed(evt);
+            }
+        });
+
+        buttunMappingUseCases.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttunMappingUseCases.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/usecases_32x32.png"))); // NOI18N
+        buttunMappingUseCases.setText("Mapping Use Cases UML");
+        buttunMappingUseCases.setToolTipText("Mapear Casos de Uso UML");
+        buttunMappingUseCases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttunMappingUseCasesActionPerformed(evt);
+            }
+        });
+
         menuFile.setText("File");
 
         fileOpenTelosFile.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
@@ -227,6 +260,15 @@ public class MainView extends javax.swing.JFrame {
         menuBar.add(menuFile);
 
         menuTools.setText("Tools");
+
+        toolsOpenE4JBPMNEditor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_MASK));
+        toolsOpenE4JBPMNEditor.setText("E4J BPMN");
+        toolsOpenE4JBPMNEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toolsOpenE4JBPMNEditorActionPerformed(evt);
+            }
+        });
+        menuTools.add(toolsOpenE4JBPMNEditor);
 
         toolsOpenE4JEditor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
         toolsOpenE4JEditor.setText("E4J i*");
@@ -283,34 +325,42 @@ public class MainView extends javax.swing.JFrame {
                 .addGap(97, 97, 97)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(buttonOpenE4JUseCases, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonOpenE4JBPMN, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonOpenTelosFile))
+                        .addComponent(buttonBPMNToUseCases))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(buttonOpenE4JiStar, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(buttonOpenE4JUseCases, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonOpenE4JiStar, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttunMappingUseCases)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(buttonOpenTelosFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttunMappingUseCases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(97, 97, 97))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {buttonOpenE4JUseCases, buttonOpenE4JiStar, buttonOpenTelosFile, buttunMappingUseCases});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {buttonBPMNToUseCases, buttonOpenE4JUseCases, buttonOpenE4JiStar, buttonOpenTelosFile});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonOpenE4JiStar)
+                    .addComponent(buttonBPMNToUseCases)
+                    .addComponent(buttonOpenE4JBPMN, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonOpenE4JiStar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttunMappingUseCases))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonOpenE4JUseCases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonOpenTelosFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabsMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE))
+                    .addComponent(buttonOpenTelosFile))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tabsMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {buttonOpenE4JUseCases, buttonOpenE4JiStar, buttunMappingUseCases});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {buttonBPMNToUseCases, buttonOpenE4JUseCases});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -337,15 +387,9 @@ public class MainView extends javax.swing.JFrame {
         this.showGuidelinesDialog();
     }//GEN-LAST:event_helpGuidelinesActionPerformed
 
-    private void buttunMappingUseCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttunMappingUseCasesActionPerformed
-        Controller.mapUseCases();
-        if (useCasesView == null) {
-            useCasesView = new UseCasesView();
-            useCasesView.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        }
-        useCasesView.updateTabel();
-        useCasesView.setVisible(true);
-    }//GEN-LAST:event_buttunMappingUseCasesActionPerformed
+    private void buttonBPMNToUseCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBPMNToUseCasesActionPerformed
+        JOptionPane.showMessageDialog(this, "Funcionalidade em desenvolvimento", "Atenção", JOptionPane.WARNING_MESSAGE);
+    }//GEN-LAST:event_buttonBPMNToUseCasesActionPerformed
 
     private void toolsOpenE4JEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolsOpenE4JEditorActionPerformed
         try {
@@ -381,6 +425,36 @@ public class MainView extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toolsOpenE4JUCEditorActionPerformed
+
+    private void toolsOpenE4JBPMNEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolsOpenE4JBPMNEditorActionPerformed
+        try {
+            this.showE4JBPMN();
+        } catch (HeadlessException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toolsOpenE4JBPMNEditorActionPerformed
+
+    private void buttonOpenE4JBPMNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOpenE4JBPMNActionPerformed
+        try {
+            this.showE4JBPMN();
+        } catch (HeadlessException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_buttonOpenE4JBPMNActionPerformed
+
+    private void buttunMappingUseCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttunMappingUseCasesActionPerformed
+        Controller.mapUseCases();
+        if (useCasesView == null) {
+            useCasesView = new UseCasesView();
+            useCasesView.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        }
+        useCasesView.updateTabel();
+        useCasesView.setVisible(true);
+    }//GEN-LAST:event_buttunMappingUseCasesActionPerformed
 
     /**
      * Abre uma janela GuidelinesDialogView
@@ -680,7 +754,7 @@ public class MainView extends javax.swing.JFrame {
      */
     private void showE4JiStar() throws HeadlessException, IOException {      
          if (E4JiStar == null) {
-            E4JiStar = new EditorJFrame(true);
+            E4JiStar = new EditorJFrame(0);
             E4JiStar.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             EditorWindowListener windowListener = new EditorWindowListener(this, E4JiStar);
             this.addWindowListener(windowListener);
@@ -710,7 +784,7 @@ public class MainView extends javax.swing.JFrame {
      */
     private void showE4JUseCases() throws HeadlessException, IOException {
         if (E4JUseCases == null) {
-            E4JUseCases = new EditorJFrame(false);
+            E4JUseCases = new EditorJFrame(1);
             E4JUseCases.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             EditorWindowListener windowListener = new EditorWindowListener(this, E4JUseCases);
             this.addWindowListener(windowListener);
@@ -723,6 +797,29 @@ public class MainView extends javax.swing.JFrame {
         this.setVisible(false);
     }
 
+    /**
+     * Abre o Editor E4J BPMN
+     */
+    private void showE4JBPMN() throws HeadlessException, IOException {
+        if (E4JBPMN == null) {
+            E4JBPMN = new EditorJFrame(2);
+            E4JBPMN.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            EditorWindowListener windowListener = new EditorWindowListener(this, E4JBPMN);
+            this.addWindowListener(windowListener);
+            E4JBPMN.addWindowListener(windowListener);
+            this.addWindowListener(windowListener);
+            BasicBPMNEditor editor = (BasicBPMNEditor) E4JBPMN.getEditor();
+        }
+        
+        //HelloWorld teste = new HelloWorld();
+        //teste.setVisible(true);
+        GraphEditor graphEditorTeste = new GraphEditor();
+        graphEditorTeste.setVisible(true);
+        Controller.setMainView(this);
+        E4JBPMN.setVisible(true);
+        this.setVisible(false);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -760,6 +857,8 @@ public class MainView extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane atoresMapeados;
+    private javax.swing.JButton buttonBPMNToUseCases;
+    private javax.swing.JButton buttonOpenE4JBPMN;
     private javax.swing.JButton buttonOpenE4JUseCases;
     private javax.swing.JButton buttonOpenE4JiStar;
     private javax.swing.JButton buttonOpenTelosFile;
@@ -779,6 +878,7 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JTable tableFile;
     private javax.swing.JTable tableLinks;
     private javax.swing.JTabbedPane tabsMenu;
+    private javax.swing.JMenuItem toolsOpenE4JBPMNEditor;
     private javax.swing.JMenuItem toolsOpenE4JEditor;
     private javax.swing.JMenuItem toolsOpenE4JUCEditor;
     // End of variables declaration//GEN-END:variables

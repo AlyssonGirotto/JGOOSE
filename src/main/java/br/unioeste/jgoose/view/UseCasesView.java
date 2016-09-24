@@ -614,7 +614,7 @@ public class UseCasesView extends javax.swing.JFrame {
 //        UseCasesDiagramView useCasesDiagramFrame = new UseCasesDiagramView(getSelectedActor(), getSelectedCase());
 //        useCasesDiagramFrame.setVisible(true);
         if (e4jInstace == null) {
-            e4jInstace = new EditorJFrame(false);
+            e4jInstace = new EditorJFrame(1);
             e4jInstace.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             EditorWindowListener windowListener = new EditorWindowListener(this, e4jInstace);
             this.addWindowListener(windowListener);
