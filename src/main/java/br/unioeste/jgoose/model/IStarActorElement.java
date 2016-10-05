@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @param childrens //filhos associados ao ATOR: SR ou ISA (códigos)
  * @param links //ligações (códigos)
  */
-public class IStarActorElement {
+    public class IStarActorElement {
 
     private String cod; //código (Element_x)
     private String name; //nome do Elemento ("Ator 1")

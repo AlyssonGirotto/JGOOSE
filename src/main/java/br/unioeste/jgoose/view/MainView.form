@@ -477,7 +477,7 @@
           <Font name="Tahoma" size="14" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="E4J BPMN"/>
-        <Property name="toolTipText" type="java.lang.String" value="Abrir Arquivo Telos"/>
+        <Property name="toolTipText" type="java.lang.String" value="Abrir Editor BPMN"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonOpenE4JBPMNActionPerformed"/>

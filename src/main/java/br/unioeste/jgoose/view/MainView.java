@@ -4,6 +4,7 @@ import br.unioeste.jgoose.BP2UC.GraphEditor;
 import br.unioeste.jgoose.BP2UC.HelloWorld;
 import br.unioeste.jgoose.controller.Controller;
 import br.unioeste.jgoose.controller.EditorWindowListener;
+import br.unioeste.jgoose.controller.ImportBPMNGraph;
 import br.unioeste.jgoose.controller.ImportIStarGraph;
 import br.unioeste.jgoose.e4j.swing.BasicBPMNEditor;
 import br.unioeste.jgoose.e4j.swing.BasicIStarEditor;
@@ -44,6 +45,7 @@ public class MainView extends javax.swing.JFrame {
     private EditorJFrame E4JiStar = null;
     private EditorJFrame E4JUseCases = null;
     private EditorJFrame E4JBPMN = null;
+    private BasicBPMNEditor editor;
     
     /**
      * Creates new form MainView
@@ -228,7 +230,7 @@ public class MainView extends javax.swing.JFrame {
 
         buttonOpenE4JBPMN.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         buttonOpenE4JBPMN.setText("E4J BPMN");
-        buttonOpenE4JBPMN.setToolTipText("Abrir Arquivo Telos");
+        buttonOpenE4JBPMN.setToolTipText("Abrir Editor BPMN");
         buttonOpenE4JBPMN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonOpenE4JBPMNActionPerformed(evt);
@@ -762,7 +764,7 @@ public class MainView extends javax.swing.JFrame {
             this.addWindowListener(windowListener);
             BasicIStarEditor editor = (BasicIStarEditor) E4JiStar.getEditor();
             JMenuBar menubar = E4JiStar.getJMenuBar();
-            // get diagram menu bar
+            // get diagram menu ba
             JMenu fileMenu = ((EditorMenuBar) menubar).getFileMenu();
             // alias label = l
             String label = mxResources.get("useCaseMaker", null, "Generate Use Cases");
@@ -808,13 +810,16 @@ public class MainView extends javax.swing.JFrame {
             this.addWindowListener(windowListener);
             E4JBPMN.addWindowListener(windowListener);
             this.addWindowListener(windowListener);
-            BasicBPMNEditor editor = (BasicBPMNEditor) E4JBPMN.getEditor();
-        }
-        
-        //HelloWorld teste = new HelloWorld();
-        //teste.setVisible(true);
-        GraphEditor graphEditorTeste = new GraphEditor();
-        graphEditorTeste.setVisible(true);
+            editor = (BasicBPMNEditor) E4JBPMN.getEditor();
+            
+            // get diagram menu bar and shows option to derive Use Cases
+            JMenuBar menubar = E4JBPMN.getJMenuBar();
+            JMenu fileMenu = ((EditorMenuBar) menubar).getFileMenu();
+            String label = mxResources.get("useCaseMaker", null, "Generate Use Cases");
+            JMenuItem menuItem = new JMenuItem(editor.bind(label, new ImportBPMNGraph(E4JBPMN)));
+            fileMenu.add(menuItem, 3);
+            fileMenu.add(new JPopupMenu.Separator(), 4);
+        }                            
         Controller.setMainView(this);
         E4JBPMN.setVisible(true);
         this.setVisible(false);

@@ -39,6 +39,7 @@ public class Controller {
                 mapping.mappingStep3();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error in Mapping of Use Cases!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         }
     }
