@@ -23,6 +23,7 @@ public class BPMNBusinessProcessModel {
 
     public BPMNBusinessProcessModel(List<BPMNActivity> activities, List<BPMNGateway> gateways, List<BPMNEvent> events, List<BPMNParticipant> participants, List<BPMNLink> links) {
         this.activities = activities;
+        this.artifacts = artifacts;
         this.gateways = gateways;
         this.events = events;
         this.participants = participants;
@@ -31,6 +32,7 @@ public class BPMNBusinessProcessModel {
 
     public BPMNBusinessProcessModel() {
         this.activities = new ArrayList<>();
+        this.artifacts = new ArrayList<>();
         this.gateways = new ArrayList<>();
         this.events = new ArrayList<>();
         this.participants = new ArrayList<>();

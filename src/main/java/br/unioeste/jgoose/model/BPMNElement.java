@@ -24,7 +24,7 @@ public class BPMNElement {
     private String parent; //father's element
     private ArrayList<String> links; //links codes
 
-    public BPMNElement() {
+    public BPMNElement() {        
         this.links = new ArrayList<>();
     }
 
@@ -76,8 +76,12 @@ public class BPMNElement {
         this.links = links;
     }       
 
+    public void addLink(String link){
+        this.links.add(link);
+    }        
+    
     @Override
     public String toString() {
         return "BPMNElement{" + "code=" + code + ", label=" + label + ", type=" + type + ", parent=" + parent + ", links=" + links + '}';
-    }
+    }        
 }

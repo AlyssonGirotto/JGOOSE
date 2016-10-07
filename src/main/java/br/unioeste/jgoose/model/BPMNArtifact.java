@@ -18,15 +18,18 @@ public class BPMNArtifact extends BPMNElement{
     public static final Integer TEXT_ANNOTATION = 4;
     
     private Integer artifactType;
+    private ArrayList<String> children; //children's id
 
     public BPMNArtifact(){
         super();
         setType(BPMNElement.ARTIFACT);
+        this.children = new ArrayList<>();
     }
     
     public BPMNArtifact(Integer artifactType, String code, String label, Integer type, String parent, ArrayList<String> links) {
         super(code, label, type, parent, links);
         this.artifactType = artifactType;
+        this.children = new ArrayList<>();
     }
 
     public Integer getArtifactType() {
@@ -37,8 +40,20 @@ public class BPMNArtifact extends BPMNElement{
         this.artifactType = artifactType;
     }
 
+    public ArrayList<String> getChildren() {
+        return children;
+    }
+
+    public void setChildren(ArrayList<String> children) {
+        this.children = children;
+    }
+
+    public void addChildren(String children){
+        this.children.add(children);
+    }
+    
     @Override
     public String toString() {
-        return "BPMNArtifact{" + "artifactType=" + artifactType + '}' + super.toString();
+        return "BPMNArtifact{" + "artifactType=" + artifactType + " children=" + children + '}' + super.toString();
     }       
 }

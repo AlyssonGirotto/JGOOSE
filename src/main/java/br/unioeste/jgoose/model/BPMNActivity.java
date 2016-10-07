@@ -16,15 +16,18 @@ public class BPMNActivity extends BPMNElement{
     public static final Integer SUBPROCESS = 2;
     
     private Integer activityType;
-
+    private ArrayList<String> children; //children's id
+        
     public BPMNActivity(){
         super();
-        setType(BPMNElement.ACTIVITY);
+        this.children = new ArrayList<>();
+        this.setType(BPMNElement.ACTIVITY);
     }
     
     public BPMNActivity(Integer activityType, String code, String label, Integer type, String parent, ArrayList<String> links) {
         super(code, label, type, parent, links);
         this.activityType = activityType;
+        this.children = new ArrayList<>();
     }
 
     public Integer getActivityType() {
@@ -34,10 +37,22 @@ public class BPMNActivity extends BPMNElement{
     public void setActivityType(Integer activityType) {
         this.activityType = activityType;
     }   
+    
+    public ArrayList<String> getChildren() {
+        return children;
+    }
+
+    public void setChildren(ArrayList<String> children) {
+        this.children = children;
+    }
+
+    public void addChildren(String children){
+        this.children.add(children);
+    }
 
     @Override
     public String toString() {
-        return "BPMNActivity{" + "activityType=" + activityType + '}' + super.toString();
+        return "BPMNActivity{" + "activityType=" + activityType + " children=" + children + '}' + super.toString();
     }
          
 }

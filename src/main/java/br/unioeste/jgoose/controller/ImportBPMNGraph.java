@@ -2,10 +2,12 @@ package br.unioeste.jgoose.controller;
 
 import br.unioeste.jgoose.e4j.swing.EditorJFrame;
 import br.unioeste.jgoose.model.BPMNActivity;
+import br.unioeste.jgoose.model.BPMNArtifact;
 import br.unioeste.jgoose.model.BPMNBusinessProcessModel;
 import br.unioeste.jgoose.model.BPMNElement;
 import br.unioeste.jgoose.model.BPMNEvent;
 import br.unioeste.jgoose.model.BPMNLink;
+import br.unioeste.jgoose.model.BPMNParticipant;
 import br.unioeste.jgoose.model.IStarActorElement;
 import br.unioeste.jgoose.model.IStarElement;
 import br.unioeste.jgoose.model.IStarLink;
@@ -41,6 +43,7 @@ public class ImportBPMNGraph extends AbstractAction {
     private Map<mxCell, Element> vertex = new HashMap<>();
     private Map<mxCell, Element> edges = new HashMap<>();
     private Map<mxCell, Object> mapped = new HashMap<>();
+    private Map<mxCell, mxCell> deleteds = new HashMap<>();
     
     private mxGraphComponent component;
     private mxGraph graph;
@@ -124,7 +127,8 @@ public class ImportBPMNGraph extends AbstractAction {
      */
     private Object convertVertex(mxCell cell) {
         Object result = null;
-
+        Object father = null;
+        
         Element element = null;
         Object v = cell.getValue();
 
@@ -153,11 +157,96 @@ public class ImportBPMNGraph extends AbstractAction {
                 event.setCode(cell.getId());
                 event.setLabel(element.getAttribute("label").replaceAll("\n", ""));
                 
-                System.out.println("event.toString() " + event.toString());
+                switch (type) {
+                    case "end_event":
+                        event.setEventType(BPMNEvent.END);
+                        break;
+                    case "end-cancel":
+                        event.setEventType(BPMNEvent.END_CANCEL);
+                        break;
+                    case "end-compensation":
+                        event.setEventType(BPMNEvent.END_COMPENSATION);
+                        break;
+                    case "end-error":
+                        event.setEventType(BPMNEvent.END_ERROR);
+                        break;
+                    case "end-link":
+                        event.setEventType(BPMNEvent.END_LINK);
+                        break;
+                    case "end-message":
+                        event.setEventType(BPMNEvent.END_MESSAGE);
+                        break;
+                    case "end-multiple":
+                        event.setEventType(BPMNEvent.END_MULTIPLE);
+                        break;
+                    case "end-terminate":
+                        event.setEventType(BPMNEvent.END_TERMINATE);
+                        break;
+                    case "intermediate_event":
+                        event.setEventType(BPMNEvent.INTERMEDIATE);
+                        break;
+                    case "intermediate-cancel":
+                        event.setEventType(BPMNEvent.INTERMEDIATE_CANCEL);
+                        break;
+                    case "intermediate-compensation":
+                        event.setEventType(BPMNEvent.INTERMEDIATE_COMPENSATION);
+                        break;
+                    case "intermediate-error":
+                        event.setEventType(BPMNEvent.INTERMEDIATE_ERROR);
+                        break;
+                    case "intermediate-link":
+                        event.setEventType(BPMNEvent.INTERMEDIATE_LINK);
+                        break;
+                    case "intermediate-message":
+                        event.setEventType(BPMNEvent.INTERMEDIATE_MESSAGE);
+                        break;
+                    case "intermediate-multiple":
+                        event.setEventType(BPMNEvent.INTERMEDIATE_MULTIPLE);
+                        break;
+                    case "intermediate-rule":
+                        event.setEventType(BPMNEvent.INTERMEDIATE_RULE);
+                        break;
+                    case "intermediate-timer":
+                        event.setEventType(BPMNEvent.INTERMEDIATE_TIMER);
+                        break;
+                    case "start_event":
+                        event.setEventType(BPMNEvent.START);
+                        break;
+                    case "start-link":
+                        event.setEventType(BPMNEvent.START_LINK);
+                        break;
+                    case "start-message":
+                        event.setEventType(BPMNEvent.START_MESSAGE);
+                        break;
+                    case "start-multiple":
+                        event.setEventType(BPMNEvent.START_MULTIPLE);
+                        break;
+                    case "start-rule":
+                        event.setEventType(BPMNEvent.START_RULE);
+                        break;
+                    case "start-timer":
+                        event.setEventType(BPMNEvent.START_TIMER);
+                        break;
+                    default:
+                        LOG.debug("case for "
+                                + "'" + type
+                                + "' event type is not implemented yet.");
+                        break;
+                }
+                
+                // set father, if exists
+                father = cell.getParent();        
+                if(father != null && father instanceof mxCell){
+                    mxCell cellFather = (mxCell) father;
+                                        
+                    if(!cellFather.getId().equals("1")){ // Possui elemento pai
+                        event.setParent(cellFather.getId());
+                    }                    
+                }   
                                                                       
                 modelBPMN.addEvent(event);
-
-                mapped.put(cell, event);
+                mapped.put(cell, event);                
+                result = event.getCode();
                 
                 break;
             case "activity":
@@ -165,33 +254,186 @@ public class ImportBPMNGraph extends AbstractAction {
                 
                 BPMNActivity activity = new BPMNActivity();                
                 activity.setCode(cell.getId());
-                activity.setLabel(element.getAttribute("label").replaceAll("\n", ""));
-                
-                System.out.println("Type: " + type);
+                activity.setLabel(element.getAttribute("label").replaceAll("\n", ""));                            
                 
                 switch (type) {
                     case "task":
                         activity.setActivityType(BPMNActivity.TASK);
                         break;
-                    case "sub-process":
+                    case "subprocess":
                         activity.setActivityType(BPMNActivity.SUBPROCESS);
+                        
+                        // check if have children
+                        int children = cell.getChildCount();
+                        if (children > 0) {
+                            // iterate children
+                            for (int i = children - 1; i >= 0; i--) {
+                                
+                                mxCell child = (mxCell) cell.getChildAt(i);
+                                String t = child.getAttribute("type");
+                                if (t == null) {
+                                    LOG.debug("(null) (null) children removed..");
+                                    deleteds.put(cell, child);
+                                    cell.remove(child);
+                                } else {
+                                    if (child.isVertex()) {
+                                        Object childObject = convertVertex(child);
+                                        if (childObject != null) {
+                                            activity.addChildren((String) childObject);                                                                                           
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                
+                        break;
+                    default:
+                        LOG.debug("case for "
+                                + "'" + type
+                                + "' activity type is not implemented yet.");
                         break;
                 }
                 
                 // set father, if exists
-                Object father = cell.getParent();        
+                father = cell.getParent();        
                 if(father != null && father instanceof mxCell){
                     mxCell cellFather = (mxCell) father;
-                    System.out.println("pai é cell. id: " + cellFather.getId());
-                }else{
-                    System.out.println("não é cell");
-                }
-        
-                System.out.println("activity.toString() " + activity.toString());
-                                                                      
-                modelBPMN.addActivity(activity);
-                
+                                        
+                    if(!cellFather.getId().equals("1")){ // Possui elemento pai
+                        activity.setParent(cellFather.getId());
+                    }                    
+                }                        
+                                        
+                modelBPMN.addActivity(activity);                
                 mapped.put(cell, activity);
+                result = activity.getCode();
+                
+                break;
+            case "artifact":
+                vertex.put(cell, element);
+                
+                BPMNArtifact artifact = new BPMNArtifact();                
+                artifact.setCode(cell.getId());
+                artifact.setLabel(element.getAttribute("label").replaceAll("\n", ""));
+                
+                switch (type) {
+                    case "data_object":
+                        artifact.setArtifactType(BPMNArtifact.DATA_OBJECT);
+                        break;   
+                    case "data_store":
+                        artifact.setArtifactType(BPMNArtifact.DATA_STORE);
+                        break;
+                    case "text_annotation":
+                        artifact.setArtifactType(BPMNArtifact.TEXT_ANNOTATION);
+                        break;
+                    case "group":
+                        artifact.setArtifactType(BPMNArtifact.GROUP);
+                        
+                        // check if have children
+                        int children = cell.getChildCount();
+                        if (children > 0) {
+                            // iterate children
+                            for (int i = children - 1; i >= 0; i--) {
+                                
+                                mxCell child = (mxCell) cell.getChildAt(i);
+                                String t = child.getAttribute("type");
+                                if (t == null) {
+                                    LOG.debug("(null) (null) children removed..");
+                                    deleteds.put(cell, child);
+                                    cell.remove(child);
+                                } else {
+                                    if (child.isVertex()) {
+                                        Object childObject = convertVertex(child);
+                                        if (childObject != null) {
+                                            artifact.addChildren((String) childObject);                                                                                           
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        break;
+                    default:
+                        LOG.debug("case for "
+                                + "'" + type
+                                + "' artifact type is not implemented yet.");
+                        break;
+                }
+                
+                // set father, if exists
+                father = cell.getParent();        
+                if(father != null && father instanceof mxCell){
+                    mxCell cellFather = (mxCell) father;
+                                        
+                    if(!cellFather.getId().equals("1")){ // Possui elemento pai
+                        artifact.setParent(cellFather.getId());
+                    }                    
+                }   
+                
+                modelBPMN.addArtifact(artifact);
+                mapped.put(cell, artifact);                
+                result = artifact.getCode();
+                
+                break;
+            case "swimlane":
+                vertex.put(cell, element);
+                
+                BPMNParticipant swimlane = new BPMNParticipant();                
+                swimlane.setCode(cell.getId());
+                swimlane.setLabel(element.getAttribute("label").replaceAll("\n", ""));
+                
+                switch (type) {
+                    case "pool":
+                        swimlane.setParticipantType(BPMNParticipant.POOL);
+                        break;   
+                    case "lane":
+                        swimlane.setParticipantType(BPMNParticipant.LANE);
+                        break;
+                    default:
+                        LOG.debug("case for "
+                                + "'" + type
+                                + "' artifact type is not implemented yet.");
+                        break;
+                }
+                
+                // check if have children
+                int children = cell.getChildCount();
+                if (children > 0) {
+                    // iterate children
+                    for (int i = children - 1; i >= 0; i--) {
+
+                        mxCell child = (mxCell) cell.getChildAt(i);
+                        String t = child.getAttribute("type");
+                        if (t == null) {
+                            LOG.debug("(null) (null) children removed..");
+                            deleteds.put(cell, child);
+                            cell.remove(child);
+                        } else {
+                            if (child.isVertex()) {
+                                Object childObject = convertVertex(child);
+                                if (childObject != null) {
+                                    swimlane.addChildren((String) childObject);                                                                                           
+                                }
+                            }
+                        }
+                    }
+                }
+                        
+                // set father, if exists
+                father = cell.getParent();        
+                if(father != null && father instanceof mxCell){
+                    mxCell cellFather = (mxCell) father;
+                                        
+                    if(!cellFather.getId().equals("1")){ // Possui elemento pai
+                        swimlane.setParent(cellFather.getId());
+                    }                    
+                }   
+                          
+                System.out.println("swimlane: " + swimlane.toString());
+                
+                modelBPMN.addParticipant(swimlane);
+                mapped.put(cell, swimlane);                
+                result = swimlane.getCode();
                 
                 break;
             case "gateway":

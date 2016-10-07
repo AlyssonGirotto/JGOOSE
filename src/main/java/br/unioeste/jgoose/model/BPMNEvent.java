@@ -58,7 +58,7 @@ public class BPMNEvent extends BPMNElement{
 
     @Override
     public String toString() {
-        return "BPMNEvent{" + "eventType=" + eventType + '}' + super.toString();
+        return "BPMNEvent{" + "eventType=" + this.eventType + '}' + super.toString();
     }  
     
 }
