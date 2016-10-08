@@ -21,7 +21,7 @@ public class BPMNBusinessProcessModel {
     private List<BPMNParticipant> participants;
     private List<BPMNLink> links;
 
-    public BPMNBusinessProcessModel(List<BPMNActivity> activities, List<BPMNGateway> gateways, List<BPMNEvent> events, List<BPMNParticipant> participants, List<BPMNLink> links) {
+    public BPMNBusinessProcessModel(List<BPMNActivity> activities, List<BPMNArtifact> artifacts, List<BPMNGateway> gateways, List<BPMNEvent> events, List<BPMNParticipant> participants, List<BPMNLink> links) {
         this.activities = activities;
         this.artifacts = artifacts;
         this.gateways = gateways;

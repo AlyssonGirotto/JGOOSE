@@ -12,8 +12,14 @@ import java.util.ArrayList;
  * @author Alysson Girotto
  */
 public class BPMNGateway extends BPMNElement{
-    public static final Integer A = 1;
-    public static final Integer B = 2;
+    public static final Integer GATEWAY_BASIC = 1;
+    public static final Integer PARALLEL = 2;
+    public static final Integer INCLUSIVE = 3;
+    public static final Integer EVENT_BASED = 4;
+    public static final Integer EXCLUSIVE_EVENT_BASED = 5;
+    public static final Integer EXCLUSIVE = 6;
+    public static final Integer PARALLEL_EVENT_BASED = 7;
+    public static final Integer COMPLEX = 8;   
     
     private Integer gatewayType;
 

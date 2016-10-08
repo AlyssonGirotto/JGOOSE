@@ -76,5 +76,10 @@ public class BPMNLink {
 
     public void setTo(String to) {
         this.to = to;
+    }     
+
+    @Override
+    public String toString() {
+        return "BPMNLink{" + "code=" + code + ", label=" + label + ", type=" + type + ", from=" + from + ", to=" + to + '}';
     }        
 }
