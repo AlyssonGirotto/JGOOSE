@@ -113,6 +113,44 @@ public class BPMNBusinessProcessModel {
     
     @Override
     public String toString() {
-        return "BPMNBusinessProcessModel{" + "activities=" + activities + ", gateways=" + gateways + ", events=" + events + ", artifacts=" + artifacts + ", participants=" + participants + ", links=" + links + '}';
+        String resposta = "Modelo BPMN\n";
+        
+        resposta += "\n\tActivties\n";
+        
+        for(BPMNActivity bPMNActivity : activities){
+            resposta += "\t\t" + bPMNActivity.toString() + "\n";
+        }
+        
+        resposta += "\n\tEvents\n";
+        
+        for(BPMNEvent bPMNEvent : events){
+            resposta += "\t\t" + bPMNEvent.toString() + "\n";
+        }
+        
+        resposta += "\n\tArtifacts\n";
+        
+        for(BPMNArtifact bPMNArtifact : artifacts){
+            resposta += "\t\t" + bPMNArtifact.toString() + "\n";
+        }
+        
+        resposta += "\n\tGateways\n";
+        
+        for(BPMNGateway bPMNGateway : gateways){
+            resposta += "\t\t" + bPMNGateway.toString() + "\n";
+        }
+        
+        resposta += "\n\tSwimlanes\n";
+        
+        for(BPMNParticipant bPMNParticipant : participants){
+            resposta += "\t\t" + bPMNParticipant.toString() + "\n";
+        }
+        
+        resposta += "\n\tLinks\n";
+        
+        for(BPMNLink bPMNLink : links){
+            resposta += "\t\t" + bPMNLink.toString() + "\n";
+        }
+                
+        return resposta;
     }
 }
