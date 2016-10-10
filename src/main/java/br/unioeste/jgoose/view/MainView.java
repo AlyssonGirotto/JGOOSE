@@ -2,6 +2,7 @@ package br.unioeste.jgoose.view;
 
 import br.unioeste.jgoose.BP2UC.GraphEditor;
 import br.unioeste.jgoose.BP2UC.HelloWorld;
+import br.unioeste.jgoose.controller.BPMNController;
 import br.unioeste.jgoose.controller.Controller;
 import br.unioeste.jgoose.controller.EditorWindowListener;
 import br.unioeste.jgoose.controller.ImportBPMNGraph;
@@ -11,6 +12,7 @@ import br.unioeste.jgoose.e4j.swing.BasicIStarEditor;
 import br.unioeste.jgoose.e4j.swing.BasicUseCasesEditor;
 import br.unioeste.jgoose.e4j.swing.EditorJFrame;
 import br.unioeste.jgoose.e4j.swing.menubar.EditorMenuBar;
+import br.unioeste.jgoose.model.BPMNLink;
 import br.unioeste.jgoose.model.IStarElement;
 import br.unioeste.jgoose.model.IStarLink;
 import com.mxgraph.util.mxResources;
@@ -51,7 +53,7 @@ public class MainView extends javax.swing.JFrame {
      * Creates new form MainView
      */
     public MainView() {
-        initComponents();
+        initComponents();                        
         setLocationRelativeTo(null);
         Image Icone;
         Icone = Toolkit.getDefaultToolkit().getImage("./src/main/resources/icons/jgoose.gif");
@@ -109,6 +111,35 @@ public class MainView extends javax.swing.JFrame {
         buttonOpenE4JUseCases = new javax.swing.JButton();
         buttonOpenE4JBPMN = new javax.swing.JButton();
         buttunMappingUseCases = new javax.swing.JButton();
+        tabsMenu2 = new javax.swing.JTabbedPane();
+        informacoesArquivo2 = new javax.swing.JScrollPane();
+        tableBPMNInfo = new javax.swing.JTable() {
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        atoresMapeados2 = new javax.swing.JScrollPane();
+        tableSwimlanes = new javax.swing.JTable() {
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        elementosMapeados2 = new javax.swing.JScrollPane();
+        tableElementsBPMN = new javax.swing.JTable() {
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        linksMapeados2 = new javax.swing.JScrollPane();
+        tableLinksBPMN = new javax.swing.JTable() {
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         fileOpenTelosFile = new javax.swing.JMenuItem();
@@ -137,7 +168,7 @@ public class MainView extends javax.swing.JFrame {
         ));
         informacoesArquivo.setViewportView(tableFile);
 
-        tabsMenu.addTab("File Information", informacoesArquivo);
+        tabsMenu.addTab("i* File Information", informacoesArquivo);
 
         tableActors.setAutoCreateRowSorter(true);
         tableActors.setModel(new javax.swing.table.DefaultTableModel(
@@ -247,6 +278,72 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
+        tabsMenu2.setToolTipText("");
+
+        tableBPMNInfo.setAutoCreateRowSorter(true);
+        tableBPMNInfo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Description", "Description"
+            }
+        ));
+        informacoesArquivo2.setViewportView(tableBPMNInfo);
+
+        tabsMenu2.addTab("BPMN Information", informacoesArquivo2);
+
+        tableSwimlanes.setAutoCreateRowSorter(true);
+        tableSwimlanes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Cod", "Name", "Childrens"
+            }
+        ));
+        atoresMapeados2.setViewportView(tableSwimlanes);
+        if (tableSwimlanes.getColumnModel().getColumnCount() > 0) {
+            tableSwimlanes.getColumnModel().getColumn(0).setMaxWidth(35);
+            tableSwimlanes.getColumnModel().getColumn(1).setMaxWidth(100);
+            tableSwimlanes.getColumnModel().getColumn(3).setMaxWidth(70);
+        }
+
+        tabsMenu2.addTab("Swimlanes", atoresMapeados2);
+
+        tableElementsBPMN.setAutoCreateRowSorter(true);
+        tableElementsBPMN.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Cod", "Name", "Element Type"
+            }
+        ));
+        elementosMapeados2.setViewportView(tableElementsBPMN);
+        if (tableElementsBPMN.getColumnModel().getColumnCount() > 0) {
+            tableElementsBPMN.getColumnModel().getColumn(0).setMaxWidth(35);
+            tableElementsBPMN.getColumnModel().getColumn(1).setMaxWidth(100);
+        }
+
+        tabsMenu2.addTab("Elements", elementosMapeados2);
+
+        tableLinksBPMN.setAutoCreateRowSorter(true);
+        tableLinksBPMN.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Cod", "From", "To", "Link Type"
+            }
+        ));
+        linksMapeados2.setViewportView(tableLinksBPMN);
+        if (tableLinksBPMN.getColumnModel().getColumnCount() > 0) {
+            tableLinksBPMN.getColumnModel().getColumn(0).setMaxWidth(50);
+        }
+
+        tabsMenu2.addTab("Links", linksMapeados2);
+
         menuFile.setText("File");
 
         fileOpenTelosFile.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
@@ -339,6 +436,7 @@ public class MainView extends javax.swing.JFrame {
                             .addComponent(buttonOpenTelosFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(buttunMappingUseCases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(97, 97, 97))
+            .addComponent(tabsMenu2, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {buttonBPMNToUseCases, buttonOpenE4JUseCases, buttonOpenE4JiStar, buttonOpenTelosFile});
@@ -359,7 +457,9 @@ public class MainView extends javax.swing.JFrame {
                     .addComponent(buttonOpenE4JUseCases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonOpenTelosFile))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tabsMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE))
+                .addComponent(tabsMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tabsMenu2, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {buttonBPMNToUseCases, buttonOpenE4JUseCases});
@@ -489,10 +589,162 @@ public class MainView extends javax.swing.JFrame {
     }
 
     /**
+     * Atualiza as Tabelas relacionadas à BPMN
+     */
+    public void updateTableBPMN(){
+        /*
+         * Atualiza Informações Arquivo
+         */
+        DefaultTableModel bpmnInfo = new DefaultTableModel();
+        String vetArquivo[] = new String[2];
+        bpmnInfo.addColumn("Description");
+        bpmnInfo.addColumn("Description");
+
+        vetArquivo[0] = "Number of swimlanes";
+        vetArquivo[1] = String.valueOf(BPMNController.getTokensBPMN().getParticipants().size());
+        bpmnInfo.addRow(vetArquivo);                
+        
+        vetArquivo[0] = "Number of elements";
+        vetArquivo[1] = String.valueOf(
+                            BPMNController.getTokensBPMN().getActivities().size() +
+                            BPMNController.getTokensBPMN().getEvents().size() +
+                            BPMNController.getTokensBPMN().getGateways().size() +
+                            BPMNController.getTokensBPMN().getArtifacts().size()
+                        );
+        bpmnInfo.addRow(vetArquivo);
+        
+        vetArquivo[0] = "Number of links";
+        vetArquivo[1] = String.valueOf(BPMNController.getTokensBPMN().getLinks().size());
+        bpmnInfo.addRow(vetArquivo);
+        
+        tableBPMNInfo.setModel(bpmnInfo);
+        
+        // Seta swimlanes mapeadas        
+        DefaultTableModel tabSwimlanes = new DefaultTableModel();
+        String vetAtores[] = new String[4];
+        tabSwimlanes.addColumn("ID");
+        tabSwimlanes.addColumn("Cod");
+        tabSwimlanes.addColumn("Name");
+        tabSwimlanes.addColumn("Childrens");
+        
+        for (int i = 0; i < BPMNController.getTokensBPMN().getParticipants().size(); i++) {
+            vetAtores[0] = String.valueOf(i + 1);
+            vetAtores[1] = BPMNController.getTokensBPMN().getParticipants().get(i).getCode();
+            vetAtores[2] = BPMNController.getTokensBPMN().getParticipants().get(i).getLabel();
+            
+            if (BPMNController.getTokensBPMN().getParticipants().get(i).getChildren().size() > 0) {
+                vetAtores[3] = "YES";
+            } else {
+                vetAtores[3] = "NO";
+            }
+            tabSwimlanes.addRow(vetAtores);
+        }
+        
+        tableSwimlanes.setModel(tabSwimlanes);
+        
+        // Seta larguda das colunas
+        tableSwimlanes.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tableSwimlanes.getColumnModel().getColumn(1).setPreferredWidth(50);
+        tableSwimlanes.getColumnModel().getColumn(2).setPreferredWidth(500);
+        tableSwimlanes.getColumnModel().getColumn(3).setPreferredWidth(50);
+        
+        // Seta elementos mapeados
+        DefaultTableModel tabElementos = new DefaultTableModel();
+        String vetElementos[] = new String[4];
+        tabElementos.addColumn("ID");
+        tabElementos.addColumn("Cod");
+        tabElementos.addColumn("Name");
+        tabElementos.addColumn("Type");
+        
+        int cont = 1; // count id        
+        
+        vetElementos[3] = "Event";        
+        for (int i = 0; i < BPMNController.getTokensBPMN().getEvents().size(); i++) {
+            vetElementos[0] = String.valueOf(cont++);
+            vetElementos[1] = BPMNController.getTokensBPMN().getEvents().get(i).getCode();
+            vetElementos[2] = BPMNController.getTokensBPMN().getEvents().get(i).getLabel();            
+            tabElementos.addRow(vetElementos);
+        }
+        
+        vetElementos[3] = "Activity";        
+        for (int i = 0; i < BPMNController.getTokensBPMN().getActivities().size(); i++) {
+            vetElementos[0] = String.valueOf(cont++);
+            vetElementos[1] = BPMNController.getTokensBPMN().getActivities().get(i).getCode();
+            vetElementos[2] = BPMNController.getTokensBPMN().getActivities().get(i).getLabel();            
+            tabElementos.addRow(vetElementos);
+        }
+        
+        vetElementos[3] = "Gateway";        
+        for (int i = 0; i < BPMNController.getTokensBPMN().getGateways().size(); i++) {
+            vetElementos[0] = String.valueOf(cont++);
+            vetElementos[1] = BPMNController.getTokensBPMN().getGateways().get(i).getCode();
+            vetElementos[2] = BPMNController.getTokensBPMN().getGateways().get(i).getLabel();            
+            tabElementos.addRow(vetElementos);
+        }
+        
+        vetElementos[3] = "Artifact";        
+        for (int i = 0; i < BPMNController.getTokensBPMN().getArtifacts().size(); i++) {
+            vetElementos[0] = String.valueOf(cont++);
+            vetElementos[1] = BPMNController.getTokensBPMN().getArtifacts().get(i).getCode();
+            vetElementos[2] = BPMNController.getTokensBPMN().getArtifacts().get(i).getLabel();            
+            tabElementos.addRow(vetElementos);
+        }
+        
+        tableElementsBPMN.setModel(tabElementos);
+        
+        // seta largura das colunas
+        tableElementsBPMN.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tableElementsBPMN.getColumnModel().getColumn(1).setPreferredWidth(80);
+        tableElementsBPMN.getColumnModel().getColumn(2).setPreferredWidth(500);
+        tableElementsBPMN.getColumnModel().getColumn(3).setPreferredWidth(80);
+        
+        // Seta links
+        DefaultTableModel tabLinks = new DefaultTableModel();
+        String vetLinks[] = new String[5];
+        tabLinks.addColumn("ID");
+        tabLinks.addColumn("Cod");
+        tabLinks.addColumn("From");
+        tabLinks.addColumn("To");
+        tabLinks.addColumn("Link Type");
+        
+        cont = 1; // id count
+
+        for (int i = 0; i < BPMNController.getTokensBPMN().getLinks().size(); i++) {
+            vetLinks[0] = String.valueOf(cont++);
+            vetLinks[1] = BPMNController.getTokensBPMN().getLinks().get(i).getCode();
+            vetLinks[2] = BPMNController.getTokensBPMN().getLinks().get(i).getFrom();
+            vetLinks[3] = BPMNController.getTokensBPMN().getLinks().get(i).getTo();
+            
+            int linkType = BPMNController.getTokensBPMN().getLinks().get(i).getType();
+            
+            if (linkType == BPMNLink.SEQUENCE)
+                vetLinks[4] = "Sequence";
+            else if (linkType == BPMNLink.ASSOCIATION)
+                vetLinks[4] = "Association";
+            else if (linkType == BPMNLink.DATA_ASSOCIATION)
+                vetLinks[4] = "Data association";
+            else if (linkType == BPMNLink.MESSAGE)
+                vetLinks[4] = "Message";
+            
+            tabLinks.addRow(vetLinks);
+        }
+
+        tableLinksBPMN.setModel(tabLinks);
+        
+        // seta largura das colunas
+        tableLinksBPMN.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tableLinksBPMN.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tableLinksBPMN.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tableLinksBPMN.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tableLinksBPMN.getColumnModel().getColumn(4).setPreferredWidth(100);
+        
+    }
+    
+    /**
      * Atualiza as Tabelas: Informações do Arquivo, Atores i* Mapeados,
      * Elementos i* Mapeados e Links i* Mapeados
      */
-    public void updateTables() {
+    public void updateTableIStar(){
         /*
          * Atualiza Informações Arquivo
          */
@@ -750,7 +1002,7 @@ public class MainView extends javax.swing.JFrame {
         tableLinks.getColumnModel().getColumn(3).setPreferredWidth(100);
         tableLinks.getColumnModel().getColumn(4).setPreferredWidth(100);
     }
-
+    
     /**
      * Abre o Editor E4J i*
      */
@@ -820,7 +1072,7 @@ public class MainView extends javax.swing.JFrame {
             fileMenu.add(menuItem, 3);
             fileMenu.add(new JPopupMenu.Separator(), 4);
         }                            
-        Controller.setMainView(this);
+        BPMNController.setMainView(this);
         E4JBPMN.setVisible(true);
         this.setVisible(false);
     }
@@ -862,6 +1114,7 @@ public class MainView extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane atoresMapeados;
+    private javax.swing.JScrollPane atoresMapeados2;
     private javax.swing.JButton buttonBPMNToUseCases;
     private javax.swing.JButton buttonOpenE4JBPMN;
     private javax.swing.JButton buttonOpenE4JUseCases;
@@ -869,22 +1122,31 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JButton buttonOpenTelosFile;
     private javax.swing.JButton buttunMappingUseCases;
     private javax.swing.JScrollPane elementosMapeados;
+    private javax.swing.JScrollPane elementosMapeados2;
     private javax.swing.JMenuItem fileOpenTelosFile;
     private javax.swing.JMenuItem helpAbout;
     private javax.swing.JMenuItem helpGuidelines;
     private javax.swing.JScrollPane informacoesArquivo;
+    private javax.swing.JScrollPane informacoesArquivo2;
     private javax.swing.JScrollPane linksMapeados;
+    private javax.swing.JScrollPane linksMapeados2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenu menuHelp;
     private javax.swing.JMenu menuTools;
     private javax.swing.JTable tableActors;
+    private javax.swing.JTable tableBPMNInfo;
     private javax.swing.JTable tableElements;
+    private javax.swing.JTable tableElementsBPMN;
     private javax.swing.JTable tableFile;
     private javax.swing.JTable tableLinks;
+    private javax.swing.JTable tableLinksBPMN;
+    private javax.swing.JTable tableSwimlanes;
     private javax.swing.JTabbedPane tabsMenu;
+    private javax.swing.JTabbedPane tabsMenu2;
     private javax.swing.JMenuItem toolsOpenE4JBPMNEditor;
     private javax.swing.JMenuItem toolsOpenE4JEditor;
     private javax.swing.JMenuItem toolsOpenE4JUCEditor;
     // End of variables declaration//GEN-END:variables
+
 }

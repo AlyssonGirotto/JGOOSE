@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Alysson Girotto
  */
-public class BPMNBusinessProcessModel {
+public class TokensBPMN {
     // Estrutura de dados que armazena elementos e ligações
     private List<BPMNActivity> activities;
     private List<BPMNGateway> gateways;
@@ -21,7 +21,7 @@ public class BPMNBusinessProcessModel {
     private List<BPMNParticipant> participants;
     private List<BPMNLink> links;
 
-    public BPMNBusinessProcessModel(List<BPMNActivity> activities, List<BPMNArtifact> artifacts, List<BPMNGateway> gateways, List<BPMNEvent> events, List<BPMNParticipant> participants, List<BPMNLink> links) {
+    public TokensBPMN(List<BPMNActivity> activities, List<BPMNArtifact> artifacts, List<BPMNGateway> gateways, List<BPMNEvent> events, List<BPMNParticipant> participants, List<BPMNLink> links) {
         this.activities = activities;
         this.artifacts = artifacts;
         this.gateways = gateways;
@@ -30,7 +30,7 @@ public class BPMNBusinessProcessModel {
         this.links = links;
     }
 
-    public BPMNBusinessProcessModel() {
+    public TokensBPMN() {
         this.activities = new ArrayList<>();
         this.artifacts = new ArrayList<>();
         this.gateways = new ArrayList<>();

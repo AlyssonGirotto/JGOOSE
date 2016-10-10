@@ -3,7 +3,7 @@ package br.unioeste.jgoose.controller;
 import br.unioeste.jgoose.e4j.swing.EditorJFrame;
 import br.unioeste.jgoose.model.BPMNActivity;
 import br.unioeste.jgoose.model.BPMNArtifact;
-import br.unioeste.jgoose.model.BPMNBusinessProcessModel;
+import br.unioeste.jgoose.model.TokensBPMN;
 import br.unioeste.jgoose.model.BPMNElement;
 import br.unioeste.jgoose.model.BPMNEvent;
 import br.unioeste.jgoose.model.BPMNGateway;
@@ -51,7 +51,7 @@ public class ImportBPMNGraph extends AbstractAction {
     private mxIGraphModel model;
     
     // Store elements for derivation
-    private BPMNBusinessProcessModel modelBPMN;
+    private TokensBPMN modelBPMN;
     
     public ImportBPMNGraph(EditorJFrame e4jInstace) {
         this.e4jinstance = e4jInstace;
@@ -84,7 +84,9 @@ public class ImportBPMNGraph extends AbstractAction {
         // clear all previous action performed
         vertex.clear();
         edges.clear();
-        modelBPMN = new BPMNBusinessProcessModel();
+        modelBPMN = new TokensBPMN();
+        
+        BPMNController.setTokensBPMN(modelBPMN);
         
         Object source = e.getSource();
         
@@ -106,50 +108,24 @@ public class ImportBPMNGraph extends AbstractAction {
                 }
             }  
             
-            System.out.println("mapped: " + mapped.toString());
-            
             // 2) compute all edges
             for (Object c : cells) {
                 mxCell cell = (mxCell) c;
 
                 findEdges(cell);
-                /*
-                if (cell.isEdge()) {
-                    System.out.println("Edge");
-                    this.convertEdge(cell);                                        
-                } else{ // convert internal edges
-                    for(int i = 0; i < cell.getChildCount(); i++){
-                        mxCell child = (mxCell) cell.getChildAt(i);
-                        String t = child.getAttribute("type");
-                        if (t == null) {
-                            LOG.debug("children removed.");
-                            deleteds.put(cell, child);
-                            cell.remove(child);
-                        } else {
-                            if (child.isEdge()) {
-                                Object result = convertEdge(child);
-                                if (result != null) {
-                                    Object parent = mapped.get(cell);
-                                    if (parent instanceof IStarActorElement) {
-                                        IStarActorElement parentActor = (IStarActorElement) parent;
-                                        parentActor.getChildrens().add((String) result);
-                                    } else {
-                                        LOG.error("parent instance not found.");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                */
-            }
-            
-            System.out.println("mapped: " + mapped.toString());
+            }            
             
             LOG.debug("total elements interpreted: " + vertex.size());
             LOG.debug("total links interpreted: " + edges.size());
             
             System.out.println("ModelBPMN:\n + " + modelBPMN.toString());
+            
+            // close editor and call view to select the main actor (system).
+            WindowEvent wev = new WindowEvent(this.e4jinstance, WindowEvent.WINDOW_CLOSING);
+            Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
+
+            // Abre a janela para selecionar o Ator Sistema
+            BPMNController.updateTables();
         }
         
     }
@@ -212,7 +188,7 @@ public class ImportBPMNGraph extends AbstractAction {
             BPMNLink bpmnLink = new BPMNLink();
             
             bpmnLink.setCode(cell.getId());
-            bpmnLink.setLabel(element.getAttribute("label").replaceAll("\n", " "));
+            bpmnLink.setLabel(element.getAttribute("label").replaceAll("\n", " ").replaceAll("\\s+", " ").replaceAll("^\\s+", ""));
             bpmnLink.setFrom(source.getId());
             bpmnLink.setTo(target.getId());
             
@@ -287,7 +263,7 @@ public class ImportBPMNGraph extends AbstractAction {
                 
                 BPMNEvent event = new BPMNEvent();                
                 event.setCode(cell.getId());
-                event.setLabel(element.getAttribute("label").replaceAll("\n", " "));
+                event.setLabel(element.getAttribute("label").replaceAll("\n", " ").replaceAll("\\s+", " ").replaceAll("^\\s+", ""));
                 
                 switch (type) {
                     case "end_event":
@@ -386,7 +362,7 @@ public class ImportBPMNGraph extends AbstractAction {
                 
                 BPMNActivity activity = new BPMNActivity();                
                 activity.setCode(cell.getId());
-                activity.setLabel(element.getAttribute("label").replaceAll("\n", " "));                            
+                activity.setLabel(element.getAttribute("label").replaceAll("\n", " ").replaceAll("\\s+", " ").replaceAll("^\\s+", ""));                            
                 
                 switch (type) {
                     case "task":
@@ -449,7 +425,7 @@ public class ImportBPMNGraph extends AbstractAction {
                 
                 BPMNArtifact artifact = new BPMNArtifact();                
                 artifact.setCode(cell.getId());
-                artifact.setLabel(element.getAttribute("label").replaceAll("\n", " "));
+                artifact.setLabel(element.getAttribute("label").replaceAll("\n", " ").replaceAll("\\s+", " ").replaceAll("^\\s+", ""));
                 
                 switch (type) {
                     case "data_object":
@@ -518,7 +494,7 @@ public class ImportBPMNGraph extends AbstractAction {
                 
                 BPMNParticipant swimlane = new BPMNParticipant();                
                 swimlane.setCode(cell.getId());
-                swimlane.setLabel(element.getAttribute("label").replaceAll("\n", " "));
+                swimlane.setLabel(element.getAttribute("label").replaceAll("\n", " ").replaceAll("\\s+", " ").replaceAll("^\\s+", ""));
                 
                 switch (type) {
                     case "pool":
@@ -580,7 +556,7 @@ public class ImportBPMNGraph extends AbstractAction {
                 
                 BPMNGateway gateway = new BPMNGateway();                
                 gateway.setCode(cell.getId());
-                gateway.setLabel(element.getAttribute("label").replaceAll("\n", " "));
+                gateway.setLabel(element.getAttribute("label").replaceAll("\n", " ").replaceAll("\\s+", " ").replaceAll("^\\s+", ""));
                 
                 switch (type) {
                     case "gateway":

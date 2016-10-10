@@ -31,6 +31,7 @@ public class Controller {
      * Método que controla o mapeamento dos casos de uso
      */
     public static void mapUseCases() {
+        System.out.println("COntroller - new Mapping()");
         mapping = new Mapping();
         try {
             mapping.mappingStep1();
@@ -134,7 +135,7 @@ public class Controller {
     public static void setSystemActor(int pos) {
         IStarActorElement Actor = ome.getActor(pos);
         systemActor = Actor.getCod();
-        mainView.updateTables();
+        mainView.updateTableIStar();
         mainView.setEnabled(true);
     }
 
