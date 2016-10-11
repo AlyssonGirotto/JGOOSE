@@ -118,7 +118,7 @@ public class ImportBPMNGraph extends AbstractAction {
             LOG.debug("total elements interpreted: " + vertex.size());
             LOG.debug("total links interpreted: " + edges.size());
             
-            System.out.println("ModelBPMN:\n + " + modelBPMN.toString());
+            //System.out.println("ModelBPMN:\n + " + modelBPMN.toString());
             
             // close editor and call view to select the main actor (system).
             WindowEvent wev = new WindowEvent(this.e4jinstance, WindowEvent.WINDOW_CLOSING);

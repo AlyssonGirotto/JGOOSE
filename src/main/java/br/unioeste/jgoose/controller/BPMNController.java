@@ -5,6 +5,7 @@
  */
 package br.unioeste.jgoose.controller;
 
+import br.unioeste.jgoose.BPMNToUC.MappingBPMNToUC;
 import br.unioeste.jgoose.model.TokensBPMN;
 import br.unioeste.jgoose.view.MainView;
 
@@ -32,5 +33,9 @@ public class BPMNController {
     // Altera tabelas na janela principal
     public static void updateTables(){
         mainView.updateTableBPMN();
+        
+        MappingBPMNToUC bpmnToUC = new MappingBPMNToUC();
+        bpmnToUC.derivation();
+        
     }
 }
