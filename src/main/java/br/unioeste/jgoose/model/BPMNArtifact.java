@@ -26,7 +26,7 @@ public class BPMNArtifact extends BPMNElement{
         this.children = new ArrayList<>();
     }
     
-    public BPMNArtifact(Integer artifactType, String code, String label, Integer type, String parent, ArrayList<String> links) {
+    public BPMNArtifact(Integer artifactType, String code, String label, Integer type, String parent, ArrayList<BPMNLink> links) {
         super(code, label, type, parent, links);
         this.artifactType = artifactType;
         this.children = new ArrayList<>();

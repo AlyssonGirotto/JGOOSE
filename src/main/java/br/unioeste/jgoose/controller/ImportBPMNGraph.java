@@ -189,8 +189,8 @@ public class ImportBPMNGraph extends AbstractAction {
             
             bpmnLink.setCode(cell.getId());
             bpmnLink.setLabel(element.getAttribute("label").replaceAll("\n", " ").replaceAll("\\s+", " ").replaceAll("^\\s+", ""));
-            bpmnLink.setFrom(source.getId());
-            bpmnLink.setTo(target.getId());
+            bpmnLink.setFrom((BPMNElement) mappedSource);
+            bpmnLink.setTo((BPMNElement) mappedTarget);
             
             switch (type) {
                 case "sequence_flow":
@@ -216,12 +216,12 @@ public class ImportBPMNGraph extends AbstractAction {
             // update link in 'from' and 'to'
             if(mappedSource instanceof BPMNElement){
                 BPMNElement bpmnElementSource = (BPMNElement) mappedSource;                
-                bpmnElementSource.addLink(bpmnLink.getCode());                
+                bpmnElementSource.addLink(bpmnLink);                
             }
             
             if(mappedTarget instanceof BPMNElement){
                 BPMNElement bpmnElementTarget = (BPMNElement) mappedTarget;                
-                bpmnElementTarget.addLink(bpmnLink.getCode());  
+                bpmnElementTarget.addLink(bpmnLink);  
             }            
         } 
 

@@ -712,8 +712,8 @@ public class MainView extends javax.swing.JFrame {
         for (int i = 0; i < BPMNController.getTokensBPMN().getLinks().size(); i++) {
             vetLinks[0] = String.valueOf(cont++);
             vetLinks[1] = BPMNController.getTokensBPMN().getLinks().get(i).getCode();
-            vetLinks[2] = BPMNController.getTokensBPMN().getLinks().get(i).getFrom();
-            vetLinks[3] = BPMNController.getTokensBPMN().getLinks().get(i).getTo();
+            vetLinks[2] = BPMNController.getTokensBPMN().getLinks().get(i).getFrom().getCode() + " - " + BPMNController.getTokensBPMN().getLinks().get(i).getFrom().getLabel();
+            vetLinks[3] = BPMNController.getTokensBPMN().getLinks().get(i).getTo().getCode() + " - " + BPMNController.getTokensBPMN().getLinks().get(i).getTo().getLabel();
             
             int linkType = BPMNController.getTokensBPMN().getLinks().get(i).getType();
             
@@ -733,10 +733,10 @@ public class MainView extends javax.swing.JFrame {
         
         // seta largura das colunas
         tableLinksBPMN.getColumnModel().getColumn(0).setPreferredWidth(10);
-        tableLinksBPMN.getColumnModel().getColumn(1).setPreferredWidth(100);
-        tableLinksBPMN.getColumnModel().getColumn(2).setPreferredWidth(100);
-        tableLinksBPMN.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tableLinksBPMN.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tableLinksBPMN.getColumnModel().getColumn(1).setPreferredWidth(60);
+        tableLinksBPMN.getColumnModel().getColumn(2).setPreferredWidth(300);
+        tableLinksBPMN.getColumnModel().getColumn(3).setPreferredWidth(300);
+        tableLinksBPMN.getColumnModel().getColumn(4).setPreferredWidth(60);
         
     }
     

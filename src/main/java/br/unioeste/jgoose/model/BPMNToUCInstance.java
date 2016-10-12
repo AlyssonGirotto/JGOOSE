@@ -11,18 +11,22 @@ package br.unioeste.jgoose.model;
  */
 public class BPMNToUCInstance {
     private Integer instanceCode;
-    private String originator; // Elemento que originou a instância
-    private String next; // Próximo elemento
+    private BPMNElement originator; // Elemento que originou a instância
+    private BPMNElement next; // Próximo elemento
     private Boolean subprocess; // Marcador de sub-processo
-
+    private Boolean finished; // Instância avaliada
+    
     public BPMNToUCInstance() {
+        subprocess = false;
+        finished = false;
     }
     
-    public BPMNToUCInstance(Integer instanceID, String originator, String next, Boolean subprocess) {
+    public BPMNToUCInstance(Integer instanceID, BPMNElement originator, BPMNElement next, Boolean subprocess) {
         this.instanceCode = instanceID;
         this.originator = originator;
         this.next = next;
         this.subprocess = subprocess;
+        finished = false;
     }
 
     public Integer getInstanceCode() {
@@ -33,19 +37,19 @@ public class BPMNToUCInstance {
         this.instanceCode = instanceCode;
     }
 
-    public String getOriginator() {
+    public BPMNElement getOriginator() {
         return originator;
     }
 
-    public void setOriginator(String originator) {
+    public void setOriginator(BPMNElement originator) {
         this.originator = originator;
     }
 
-    public String getNext() {
+    public BPMNElement getNext() {
         return next;
     }
 
-    public void setNext(String next) {
+    public void setNext(BPMNElement next) {
         this.next = next;
     }
 
@@ -57,14 +61,23 @@ public class BPMNToUCInstance {
         this.subprocess = subprocess;
     }
 
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
+    
     @Override
     public String toString() {
         return "\tBPMNToUCInstance{" + 
-                "\t\tinstanceID=" + instanceCode + 
-                "\t\toriginator=" + originator +
-                "\t\tnext=" + next +
-                "\t\tsubprocess=" + subprocess + 
-                "\t}";
+                "\n\tinstanceID=" + instanceCode + 
+                "\n\toriginator=" + originator +
+                "\n\tnext=" + next +
+                "\n\tsubprocess=" + subprocess + 
+                "\n\tfinished=" + finished + 
+                "\n}";
     }        
     
 }

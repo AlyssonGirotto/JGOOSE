@@ -43,7 +43,7 @@ public class BPMNEvent extends BPMNElement{
         setType(BPMNElement.EVENT);
     }
     
-    public BPMNEvent(Integer eventType, String code, String label, Integer type, String parent, ArrayList<String> links) {
+    public BPMNEvent(Integer eventType, String code, String label, Integer type, String parent, ArrayList<BPMNLink> links) {
         super(code, label, type, parent, links);
         this.eventType = eventType;
     }

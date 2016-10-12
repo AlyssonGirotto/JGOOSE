@@ -22,13 +22,13 @@ public class BPMNElement {
     private String label;
     private Integer type;
     private String parent; //father's element
-    private ArrayList<String> links; //links codes
+    private ArrayList<BPMNLink> links; //links codes
 
     public BPMNElement() {        
         this.links = new ArrayList<>();
     }
 
-    public BPMNElement(String code, String label, Integer type, String parent, ArrayList<String> links) {
+    public BPMNElement(String code, String label, Integer type, String parent, ArrayList<BPMNLink> links) {
         this.code = code;
         this.label = label;
         this.type = type;
@@ -68,15 +68,15 @@ public class BPMNElement {
         this.parent = parent;
     }
 
-    public ArrayList<String> getLinks() {
+    public ArrayList<BPMNLink> getLinks() {
         return links;
     }
 
-    public void setLinks(ArrayList<String> links) {
+    public void setLinks(ArrayList<BPMNLink> links) {
         this.links = links;
     }       
 
-    public void addLink(String link){
+    public void addLink(BPMNLink link){
         this.links.add(link);
     }        
     

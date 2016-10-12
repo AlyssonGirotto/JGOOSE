@@ -18,10 +18,10 @@ public class BPMNLink {
     private String code;
     private String label;
     private Integer type;
-    private String from;
-    private String to;	
+    private BPMNElement from;
+    private BPMNElement to;	
 
-    public BPMNLink(String code, String label, int type, String from, String to) {
+    public BPMNLink(String code, String label, int type, BPMNElement from, BPMNElement to) {
         this.code = code;
         this.label = label;
         this.type = type;
@@ -62,24 +62,25 @@ public class BPMNLink {
         this.type = type;
     }
 
-    public String getFrom() {
+    public BPMNElement getFrom() {
         return from;
     }
 
-    public void setFrom(String from) {
+    public void setFrom(BPMNElement from) {
         this.from = from;
     }
 
-    public String getTo() {
+    public BPMNElement getTo() {
         return to;
     }
 
-    public void setTo(String to) {
+    public void setTo(BPMNElement to) {
         this.to = to;
     }     
 
     @Override
     public String toString() {
-        return "BPMNLink{" + "code=" + code + ", label=" + label + ", type=" + type + ", from=" + from + ", to=" + to + '}';
+        //return "BPMNLink{" + "code=" + code + ", label=" + label + ", type=" + type + ", from=" + from + ", to=" + to + '}';
+        return "BPMNLink{" + "code=" + code + ", label=" + label + ", type=" + type + '}';
     }        
 }

@@ -24,7 +24,7 @@ public class BPMNActivity extends BPMNElement{
         this.setType(BPMNElement.ACTIVITY);
     }
     
-    public BPMNActivity(Integer activityType, String code, String label, Integer type, String parent, ArrayList<String> links) {
+    public BPMNActivity(Integer activityType, String code, String label, Integer type, String parent, ArrayList<BPMNLink> links) {
         super(code, label, type, parent, links);
         this.activityType = activityType;
         this.children = new ArrayList<>();
