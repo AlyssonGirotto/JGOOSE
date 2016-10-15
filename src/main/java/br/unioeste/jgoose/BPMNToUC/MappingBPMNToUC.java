@@ -7,12 +7,15 @@ package br.unioeste.jgoose.BPMNToUC;
 
 import br.unioeste.jgoose.controller.BPMNController;
 import br.unioeste.jgoose.model.BPMNActivity;
+import br.unioeste.jgoose.model.BPMNArtifact;
 import br.unioeste.jgoose.model.BPMNElement;
 import br.unioeste.jgoose.model.BPMNEvent;
+import br.unioeste.jgoose.model.BPMNGateway;
 import br.unioeste.jgoose.model.BPMNLink;
 import br.unioeste.jgoose.model.BPMNParticipant;
 import br.unioeste.jgoose.model.BPMNToUCInstance;
 import br.unioeste.jgoose.model.UCActor;
+import br.unioeste.jgoose.model.UCUseCase;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +25,14 @@ import java.util.List;
  */
 public class MappingBPMNToUC {
 
-    private Integer actualInstance;
+    private Integer currentInstance;
     private Integer countInstance;
     private Integer countUseCase;
 
     private List<BPMNToUCInstance> instances;
     private List<UCActor> actors;
-
+    private List<UCUseCase> useCases;
+    
     private List<String> avaliationOrder;
 
     public MappingBPMNToUC() {
@@ -36,6 +40,7 @@ public class MappingBPMNToUC {
         this.instances = new ArrayList<>();
         this.avaliationOrder = new ArrayList<>();
         this.actors = new ArrayList<>();
+        this.useCases = new ArrayList<>();
     }
 
     public void derivation() {
@@ -152,71 +157,88 @@ public class MappingBPMNToUC {
 
     // Categoria 2
     private void searchUseCases() {
-        actualInstance = instances.size() - 1;
+        currentInstance = instances.size() - 1;
         int countLinks; //conta a quantidade de links de 'saída' de um dado elemento
 
-        // Identifica qual a instância a ser analisada
-        while (actualInstance != -1) {
-            if (instances.get(actualInstance).getFinished()) { //instância já avaliada
-                actualInstance--;
+        // Analisa as instâncias (de acordo com a ordem contrária em que foram inseridas, última para primeira)
+        while (currentInstance != -1) {
+            // atualiza para a última instância gerada
+            // currentInstance = instances.size() - 1;
+            
+            if (instances.get(currentInstance).getFinished()) { //instância já avaliada
+                currentInstance--;
             } else { //instância ainda não avaliada
                 // obtem o proximo elemento a ser avaliado
-                BPMNElement actualElement = instances.get(actualInstance).getNext();
+                BPMNElement currentElement = instances.get(currentInstance).getNext();
 
                 // verifica se o elemento já nao foi avaliado
-                if (!avaliationOrder.contains(actualElement.getCode())) { // ainda não foi avaliado
+                if (!avaliationOrder.contains(currentElement.getCode())) { // ainda não foi avaliado
 
+                    // Avalia o elemento
+                    if (currentElement instanceof BPMNActivity) { 
+                        analyzeActivity((BPMNActivity) currentElement);
+                    } else if (currentElement instanceof BPMNEvent) {
+                        analyzeEvent((BPMNEvent) currentElement);
+                    } else if (currentElement instanceof BPMNGateway) {
+                        analyzeGateway((BPMNGateway) currentElement);
+                    } else if (currentElement instanceof BPMNArtifact) {
+                        analyzeArtifact((BPMNArtifact) currentElement);
+                    }
+                    
                     countLinks = 0;
 
                     // verifica se o elemento possui ou não multiplas opcoes de sequencia ou mensagem
-                    for (BPMNLink link : actualElement.getLinks()) {
+                    for (BPMNLink link : currentElement.getLinks()) {
                         if (link.getType() != BPMNLink.ASSOCIATION) { //associacoes não são consideradas                            
-                            if (actualElement.getCode().equals(link.getFrom().getCode())) {
+                            if (currentElement.getCode().equals(link.getFrom().getCode())) {
                                 countLinks++;
                             }
                         }
                     }
 
+                    // Determina qual o próximo elemento a ser avaliado
                     if (countLinks > 1) { // DRD9 - multiplas instancias devem ser criadas
                         //Cria uma nova instância para cada fluxo de saída
                         // 1º - Instancias provenientes de fluxos de sequencia
-                        for (BPMNLink link : actualElement.getLinks()) {
+                        for (BPMNLink link : currentElement.getLinks()) {
                             if (link.getType() == BPMNLink.SEQUENCE) {
                                 addInstance(link);
                             }
                         }
 
                         // 2º - Instancias provenientes de fluxos de mensagem
-                        for (BPMNLink link : actualElement.getLinks()) {
+                        for (BPMNLink link : currentElement.getLinks()) {
                             if (link.getType() == BPMNLink.MESSAGE) {
                                 addInstance(link);
                             }
                         }
 
                         //marca a instância atual como avaliada
-                        instances.get(actualInstance).setFinished(true);
+                        instances.get(currentInstance).setFinished(true);
 
                         //marca o elemento atual como analisado
                         // atualiza a proxima instância a ser avaliada
-                        actualInstance = instances.size() - 1;
-                    } else //Verifica o tipo do elemento                    
-                    if (actualElement instanceof BPMNActivity) {
-                        analyzeActivity((BPMNActivity) actualElement);
-                    } else if (actualElement instanceof BPMNEvent) {
-                        analyzeEvent((BPMNEvent) actualElement);
-                    } // atualiza instância a ser avaliada
-
+                        currentInstance = instances.size() - 1;
+                    } else{ //Verifica o tipo do elemento    
+                        // atualiza instância a ser avaliada
+                    }
                 } else { // elemento já avaliado
                     //finaliza avaliação da instância atual
-                    instances.get(actualInstance).setFinished(true);
-                    actualInstance--;
+                    finishCurrentInstance();
                 }
             }
         }
     }
 
+    // finaliza avaliação da instância atual
+    private void finishCurrentInstance(){
+        instances.get(currentInstance).setFinished(true);
+        currentInstance--;
+    }
+    
     // Armazena nova instancia obtida
     private void addInstance(BPMNLink link) {
+        System.out.println("Adicionando instância");
         BPMNToUCInstance instance = new BPMNToUCInstance();
 
         instance.setInstanceCode(countInstance++);
@@ -245,23 +267,80 @@ public class MappingBPMNToUC {
             analyzeSubprocess(activity);
         }
     }
+    
+    //Avalia gateway
+    private void analyzeGateway(BPMNGateway gateway) {        
+        System.out.println("Analisando gateway");
+    }
+    
+    //Avalia activity
+    private void analyzeArtifact(BPMNArtifact artifact) {        
+        System.out.println("Analisando artifact");
+    }    
 
     //Avalia task
     private void analyzeTask(BPMNActivity activity) {
-        System.out.println("task");
+        System.out.println("analisando task");
+        
+        boolean possuiFluxoMensagemParaOutraAtividade = false;
+                
         //Avalia se a tarefa possui fluxo de mensagem para outra atividade
         for(BPMNLink link : activity.getLinks()){
-            if(link.getType() == BPMNLink.SEQUENCE){
+            if(link.getType() == BPMNLink.MESSAGE){
                 if(link.getFrom().getCode().equals(activity.getCode()) && link.getTo() instanceof BPMNActivity){
-                    // DRD5 - Possui fluxo de saída para outra atividade
-                    analyzeTaskWithLinks(activity);
+                    possuiFluxoMensagemParaOutraAtividade = true;
+                    break;
                 }
             }
         }
+        
+        if(possuiFluxoMensagemParaOutraAtividade){
+            // DRD5 - Possui fluxo de saída de mensagem para outra atividade
+            analyzeTaskWithMessageLinksToActivities(activity);
+        } else{ 
+           // DRD4 - Não possui fluxo de saída de mensagem para outra atividade 
+           // Adiciona o caso de uso obtido
+            addUseCase(activity, "DRD4");
+        }
     }
 
-    //DRD5 - Avalia task com fluxo de saída para outra atividade
-    private void analyzeTaskWithLinks(BPMNActivity activity) {
+    //Dada a atividade originadora e a respectiva diretriz, adiciona um caso de uso
+    private void addUseCase(BPMNActivity activity, String guidelineUsed){
+        // Gera um caso de Uso
+        UCUseCase useCase = new UCUseCase();
+        
+        useCase.setCode(countUseCase++);
+        useCase.setName(activity.getLabel());
+        useCase.setInstanceCod(countInstance);
+        useCase.setGuidelineUsed(guidelineUsed);
+        
+        useCases.add(useCase);
+    }
+    
+    //DRD5 - Avalia task com fluxo de saída de mensagem para outra atividade
+    private void analyzeTaskWithMessageLinksToActivities(BPMNActivity activity) {                
+        // Adiciona o caso de uso obtido
+        addUseCase(activity, "DRD5");
+        
+        // Finaliza-se a instância atual
+        finishCurrentInstance();
+        
+        // Cria novas instâncias a partir da instância atual
+        //Cria uma nova instância para cada fluxo de saída
+        
+        // 1º - Instancias provenientes de fluxos de sequencia
+        for (BPMNLink link : activity.getLinks()) {
+            if (link.getType() == BPMNLink.SEQUENCE) {
+                addInstance(link);
+            }
+        }
+
+        // 2º - Instancias provenientes de fluxos de mensagem
+        for (BPMNLink link : activity.getLinks()) {
+            if (link.getType() == BPMNLink.MESSAGE) {
+                addInstance(link);
+            }
+        }
         
     }
     
