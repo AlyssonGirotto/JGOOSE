@@ -27,11 +27,6 @@ public class BPMNGateway extends BPMNElement{
         super();
         setType(BPMNElement.GATEWAY);
     }
-    
-    public BPMNGateway(Integer gatewayType, String code, String label, Integer type, String parent, ArrayList<BPMNLink> links) {
-        super(code, label, type, parent, links);
-        this.gatewayType = gatewayType;
-    }
 
     public Integer getGatewayType() {
         return gatewayType;

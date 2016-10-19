@@ -216,12 +216,12 @@ public class ImportBPMNGraph extends AbstractAction {
             // update link in 'from' and 'to'
             if(mappedSource instanceof BPMNElement){
                 BPMNElement bpmnElementSource = (BPMNElement) mappedSource;                
-                bpmnElementSource.addLink(bpmnLink);                
+                bpmnElementSource.addLinkFrom(bpmnLink);                
             }
             
             if(mappedTarget instanceof BPMNElement){
                 BPMNElement bpmnElementTarget = (BPMNElement) mappedTarget;                
-                bpmnElementTarget.addLink(bpmnLink);  
+                bpmnElementTarget.addLinkTo(bpmnLink);  
             }            
         } 
 

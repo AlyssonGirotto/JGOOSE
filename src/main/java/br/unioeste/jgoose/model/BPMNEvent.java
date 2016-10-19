@@ -42,11 +42,6 @@ public class BPMNEvent extends BPMNElement{
         super();
         setType(BPMNElement.EVENT);
     }
-    
-    public BPMNEvent(Integer eventType, String code, String label, Integer type, String parent, ArrayList<BPMNLink> links) {
-        super(code, label, type, parent, links);
-        this.eventType = eventType;
-    }
 
     public Integer getEventType() {
         return eventType;
@@ -61,4 +56,18 @@ public class BPMNEvent extends BPMNElement{
         return "BPMNEvent{" + "eventType=" + this.eventType + '}' + super.toString();
     }  
     
+    public boolean isEndEvent(){
+        if(this.getEventType().equals(BPMNEvent.END)  ||
+            this.getEventType().equals(BPMNEvent.END_CANCEL)  ||
+            this.getEventType().equals(BPMNEvent.END_COMPENSATION)  ||
+            this.getEventType().equals(BPMNEvent.END_ERROR)  ||
+            this.getEventType().equals(BPMNEvent.END_LINK)  ||
+            this.getEventType().equals(BPMNEvent.END_MESSAGE)  ||
+            this.getEventType().equals(BPMNEvent.END_MULTIPLE)  ||
+            this.getEventType().equals(BPMNEvent.END_TERMINATE)){
+            return true;
+        } else{
+            return false;
+        }
+    }
 }

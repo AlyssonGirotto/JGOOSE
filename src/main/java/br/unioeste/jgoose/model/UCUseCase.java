@@ -58,6 +58,10 @@ public class UCUseCase {
         this.includedUseCases = includedUseCases;
     }
    
+    @Override
+    public String toString(){
+        return ("Cod: " + code + " Name: " + name);
+    }
    
    
 }

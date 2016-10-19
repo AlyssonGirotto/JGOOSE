@@ -36,7 +36,9 @@ public class MappingBPMNToUC {
     private List<String> avaliationOrder;
 
     public MappingBPMNToUC() {
+        currentInstance = 0;
         countInstance = 0;
+        countUseCase = 0;
         this.instances = new ArrayList<>();
         this.avaliationOrder = new ArrayList<>();
         this.actors = new ArrayList<>();
@@ -116,6 +118,7 @@ public class MappingBPMNToUC {
                     possuiFluxoRecebimento = false;
                     nextElements = new ArrayList<>();
 
+                    /*
                     // Percorre os links, identificando os links vinculados ao elemento
                     for (BPMNLink link : event.getLinks()) {
 
@@ -132,7 +135,18 @@ public class MappingBPMNToUC {
                                 nextElements.add(link.getTo()); // armazena o próximo elemento
                             }
                         }
-
+                    }
+                    */
+                    
+                    // Link é direcionado ao Evento atual -> possui fluxo de recebimento
+                    for (BPMNLink link : event.getLinksTo()) {
+                        possuiFluxoRecebimento = true;
+                        break;
+                    }
+                    
+                    // Link é originado pelo evento atual
+                    for (BPMNLink link : event.getLinksFrom()) {
+                        nextElements.add(link.getTo()); // armazena o próximo elemento
                     }
 
                     // Não possui fluxo de recebimento. Diretriz se aplica
@@ -162,6 +176,7 @@ public class MappingBPMNToUC {
 
         // Analisa as instâncias (de acordo com a ordem contrária em que foram inseridas, última para primeira)
         while (currentInstance != -1) {
+            System.out.println("Instância: " + currentInstance);
             // atualiza para a última instância gerada
             // currentInstance = instances.size() - 1;
             
@@ -171,61 +186,94 @@ public class MappingBPMNToUC {
                 // obtem o proximo elemento a ser avaliado
                 BPMNElement currentElement = instances.get(currentInstance).getNext();
 
-                // verifica se o elemento já nao foi avaliado
-                if (!avaliationOrder.contains(currentElement.getCode())) { // ainda não foi avaliado
-
-                    // Avalia o elemento
-                    if (currentElement instanceof BPMNActivity) { 
-                        analyzeActivity((BPMNActivity) currentElement);
-                    } else if (currentElement instanceof BPMNEvent) {
-                        analyzeEvent((BPMNEvent) currentElement);
-                    } else if (currentElement instanceof BPMNGateway) {
-                        analyzeGateway((BPMNGateway) currentElement);
-                    } else if (currentElement instanceof BPMNArtifact) {
-                        analyzeArtifact((BPMNArtifact) currentElement);
-                    }
+                while(true){ // Permanece avaliando a instância atual
+                    System.out.println("Elemento atual: " + currentElement.getLabel());
                     
-                    countLinks = 0;
+                    // verifica se o elemento já nao foi avaliado
+                    if (!avaliationOrder.contains(currentElement.getCode())) { // ainda não foi avaliado
 
-                    // verifica se o elemento possui ou não multiplas opcoes de sequencia ou mensagem
-                    for (BPMNLink link : currentElement.getLinks()) {
-                        if (link.getType() != BPMNLink.ASSOCIATION) { //associacoes não são consideradas                            
-                            if (currentElement.getCode().equals(link.getFrom().getCode())) {
-                                countLinks++;
-                            }
-                        }
-                    }
+                        // Avalia o elemento
+                        if (currentElement instanceof BPMNActivity) { 
+                            analyzeActivity((BPMNActivity) currentElement);                    
+                        } else if (currentElement instanceof BPMNGateway) {
+                            analyzeGateway((BPMNGateway) currentElement);
+                        } else if (currentElement instanceof BPMNArtifact) {
+                            analyzeArtifact((BPMNArtifact) currentElement);
+                        } else if (currentElement instanceof BPMNEvent) {
+                            //analyzeEvent((BPMNEvent) currentElement);
+                            BPMNEvent event = (BPMNEvent) currentElement;
 
-                    // Determina qual o próximo elemento a ser avaliado
-                    if (countLinks > 1) { // DRD9 - multiplas instancias devem ser criadas
-                        //Cria uma nova instância para cada fluxo de saída
-                        // 1º - Instancias provenientes de fluxos de sequencia
-                        for (BPMNLink link : currentElement.getLinks()) {
-                            if (link.getType() == BPMNLink.SEQUENCE) {
-                                addInstance(link);
-                            }
-                        }
-
-                        // 2º - Instancias provenientes de fluxos de mensagem
-                        for (BPMNLink link : currentElement.getLinks()) {
-                            if (link.getType() == BPMNLink.MESSAGE) {
-                                addInstance(link);
+                            // DRD7 - É evento de fim, deve-se finalizar a instância atual
+                            if(event.isEndEvent()){                                
+                                // finaliza avaliação da instância atual
+                                finishCurrentInstance();
+                                break; 
                             }
                         }
 
-                        //marca a instância atual como avaliada
-                        instances.get(currentInstance).setFinished(true);
+                        countLinks = 0;
 
-                        //marca o elemento atual como analisado
-                        // atualiza a proxima instância a ser avaliada
-                        currentInstance = instances.size() - 1;
-                    } else{ //Verifica o tipo do elemento    
-                        // atualiza instância a ser avaliada
-                    }
-                } else { // elemento já avaliado
-                    //finaliza avaliação da instância atual
-                    finishCurrentInstance();
-                }
+                        // Determinação da sequência do processo
+
+                        // verifica se o elemento possui ou não multiplas opcoes de sequencia ou mensagem
+                        for (BPMNLink link : currentElement.getLinksFrom()) { // elemento atual é origem
+                            if (link.getType() != BPMNLink.ASSOCIATION && link.getType() != BPMNLink.DATA_ASSOCIATION) { //associacoes não são consideradas                            
+                                countLinks++;                                
+                            }
+                        }
+
+                        // Determina qual o próximo elemento a ser avaliado
+                        if (countLinks > 1) { // DRD9 - multiplas instancias devem ser criadas
+
+                            System.out.println("multiplas instancias");
+                            //Cria uma nova instância para cada fluxo de saída
+                            // 1º - Instancias provenientes de fluxos de sequencia
+                            for (BPMNLink link : currentElement.getLinksFrom()) {
+                                if (link.getType() == BPMNLink.SEQUENCE) {
+                                    addInstance(link);
+                                }
+                            }
+
+                            // 2º - Instancias provenientes de fluxos de mensagem
+                            for (BPMNLink link : currentElement.getLinksFrom()) {
+                                if (link.getType() == BPMNLink.MESSAGE && currentElement.getCode().equals(link.getFrom().getCode())) {
+                                    addInstance(link);
+                                }
+                            }
+
+                            //marca o elemento atual como analisado
+                            avaliationOrder.add(currentElement.getCode());
+                            
+                            //marca a instância atual como avaliada
+                            finishCurrentInstance();
+                            break;                                                        
+                        } else{ // único fluxo, permanece na mesma instância 
+                            
+                            //marca o elemento atual como analisado
+                            avaliationOrder.add(currentElement.getCode());
+                            
+                            // atualiza para próximo elemento da instância sendo avaliada
+                            try{
+                                currentElement = currentElement.getLinksFrom().get(0).getTo();
+                            } catch(Exception e)    {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else { // elemento já avaliado
+                        // Atividade já avaliada
+                        if (currentElement instanceof BPMNActivity) { 
+                            //TODO: implementar 
+                            System.out.println("Atividade já avaliada");
+                            finishCurrentInstance();
+                            break;
+                        } else{
+                            //finaliza avaliação da instância atual
+                            finishCurrentInstance();
+                            break;
+                        }
+
+                    }                    
+                }                                
             }
         }
     }
@@ -233,7 +281,7 @@ public class MappingBPMNToUC {
     // finaliza avaliação da instância atual
     private void finishCurrentInstance(){
         instances.get(currentInstance).setFinished(true);
-        currentInstance--;
+        currentInstance = instances.size() - 1;
     }
     
     // Armazena nova instancia obtida
@@ -281,7 +329,8 @@ public class MappingBPMNToUC {
     //Avalia task
     private void analyzeTask(BPMNActivity activity) {
         System.out.println("analisando task");
-        
+        addUseCase(activity, "DRD4");
+        /*
         boolean possuiFluxoMensagemParaOutraAtividade = false;
                 
         //Avalia se a tarefa possui fluxo de mensagem para outra atividade
@@ -302,6 +351,7 @@ public class MappingBPMNToUC {
            // Adiciona o caso de uso obtido
             addUseCase(activity, "DRD4");
         }
+*/
     }
 
     //Dada a atividade originadora e a respectiva diretriz, adiciona um caso de uso
@@ -315,6 +365,8 @@ public class MappingBPMNToUC {
         useCase.setGuidelineUsed(guidelineUsed);
         
         useCases.add(useCase);
+        
+        System.out.println("use cases: " + useCases.toString());
     }
     
     //DRD5 - Avalia task com fluxo de saída de mensagem para outra atividade
@@ -327,7 +379,7 @@ public class MappingBPMNToUC {
         
         // Cria novas instâncias a partir da instância atual
         //Cria uma nova instância para cada fluxo de saída
-        
+        /*
         // 1º - Instancias provenientes de fluxos de sequencia
         for (BPMNLink link : activity.getLinks()) {
             if (link.getType() == BPMNLink.SEQUENCE) {
@@ -341,7 +393,7 @@ public class MappingBPMNToUC {
                 addInstance(link);
             }
         }
-        
+     */   
     }
     
     //Avalia subprocess
@@ -353,7 +405,8 @@ public class MappingBPMNToUC {
     //Avalia event
     private void analyzeEvent(BPMNEvent event) {
         System.out.println("event");
-        //é task, subprocess, fluxos 
+        
+        
     }
 
     // Retorna Actor com o id informado

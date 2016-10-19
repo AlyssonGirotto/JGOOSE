@@ -24,12 +24,6 @@ public class BPMNParticipant extends BPMNElement{
         this.children = new ArrayList<>();
     }
     
-    public BPMNParticipant(Integer participantType, String code, String label, Integer type, String parent, ArrayList<BPMNLink> links) {
-        super(code, label, type, parent, links);
-        this.participantType = participantType;
-        this.children = new ArrayList<>();
-    }
-
     public Integer getParticipantType() {
         return participantType;
     }

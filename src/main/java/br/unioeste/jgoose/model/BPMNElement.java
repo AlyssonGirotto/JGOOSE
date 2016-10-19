@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Alysson Girotto
  */
-public class BPMNElement {
+public class BPMNElement implements Cloneable{
     public static final Integer EVENT = 1;
     public static final Integer GATEWAY = 2;
     public static final Integer ARTIFACT = 3;
@@ -22,18 +22,21 @@ public class BPMNElement {
     private String label;
     private Integer type;
     private String parent; //father's element
-    private ArrayList<BPMNLink> links; //links codes
+    private ArrayList<BPMNLink> linksFrom; //links From Element
+    private ArrayList<BPMNLink> linksTo; //links to Element
 
     public BPMNElement() {        
-        this.links = new ArrayList<>();
+        this.linksFrom = new ArrayList<>();
+        this.linksTo = new ArrayList<>();
     }
-
-    public BPMNElement(String code, String label, Integer type, String parent, ArrayList<BPMNLink> links) {
+    
+    public BPMNElement(String code, String label, Integer type, String parent, ArrayList<BPMNLink> linksTo, ArrayList<BPMNLink> linksFrom) {
         this.code = code;
         this.label = label;
         this.type = type;
         this.parent = parent;
-        this.links = links;
+        this.linksTo = linksTo;
+        this.linksFrom = linksFrom;
     }    
 
     public String getCode() {
@@ -68,20 +71,37 @@ public class BPMNElement {
         this.parent = parent;
     }
 
-    public ArrayList<BPMNLink> getLinks() {
-        return links;
+    public ArrayList<BPMNLink> getLinksFrom() {
+        return linksFrom;
     }
 
-    public void setLinks(ArrayList<BPMNLink> links) {
-        this.links = links;
-    }       
+    public void setLinksFrom(ArrayList<BPMNLink> linksFrom) {
+        this.linksFrom = linksFrom;
+    }
 
-    public void addLink(BPMNLink link){
-        this.links.add(link);
-    }        
+    public ArrayList<BPMNLink> getLinksTo() {
+        return linksTo;
+    }
+
+    public void setLinksTo(ArrayList<BPMNLink> linksTo) {
+        this.linksTo = linksTo;
+    }
+         
+    public void addLinkTo(BPMNLink bPMNLink){
+        linksTo.add(bPMNLink);
+    }
+    
+    public void addLinkFrom(BPMNLink bPMNLink){
+        linksFrom.add(bPMNLink);
+    }
     
     @Override
     public String toString() {
-        return "BPMNElement{" + "code=" + code + ", label=" + label + ", type=" + type + ", parent=" + parent + ", links=" + links + '}';
-    }        
+        return "BPMNElement{" + "code=" + code + ", label=" + label + ", type=" + type + ", parent=" + parent + ", linksTo=" + linksTo + ", linksFrom=" + linksFrom + '}';
+    }    
+
+    @Override
+    public BPMNElement clone() throws CloneNotSupportedException{
+        return (BPMNElement) super.clone();
+    }
 }
