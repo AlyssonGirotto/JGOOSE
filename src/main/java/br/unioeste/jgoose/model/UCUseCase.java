@@ -5,6 +5,7 @@
  */
 package br.unioeste.jgoose.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,11 +13,17 @@ import java.util.List;
  * @author Alysson Girotto
  */
 public class UCUseCase {
-   private Integer code;
-   private String name;
-   private String guidelineUsed; //Diretriz utilizada
-   private Integer instanceCod;
-   private List<Integer> includedUseCases; //Código dos casos de uso incluídos
+
+    private Integer code;
+    private String name;
+    private String guidelineUsed; //Diretriz utilizada
+    private Integer instanceCod;
+    private String bpmnElementCode;
+    private List<UCUseCase> includedUseCases; //Código dos casos de uso incluídos
+
+    public UCUseCase() {
+        includedUseCases = new ArrayList<>();
+    }
 
     public Integer getCode() {
         return code;
@@ -50,18 +57,33 @@ public class UCUseCase {
         this.instanceCod = instanceCod;
     }
 
-    public List<Integer> getIncludedUseCases() {
+    public String getBpmnElementCode() {
+        return bpmnElementCode;
+    }
+
+    public void setBpmnElementCode(String bpmnElementCode) {
+        this.bpmnElementCode = bpmnElementCode;
+    }
+
+    public List<UCUseCase> getIncludedUseCases() {
         return includedUseCases;
     }
 
-    public void setIncludedUseCases(List<Integer> includedUseCases) {
+    public void setIncludedUseCases(List<UCUseCase> includedUseCases) {
         this.includedUseCases = includedUseCases;
     }
-   
+    
+    public void addIncludedUseCase(UCUseCase useCase){
+        this.includedUseCases.add(useCase);
+    }
+
     @Override
-    public String toString(){
+    public String toString() {
         return ("Cod: " + code + " Name: " + name);
     }
-   
+    
+    public String printAllInfo(){
+        return "\n\tCode=" + code + " Name=" + name + " guidelineUsed=" + guidelineUsed + " instanceCod=" + instanceCod + " bpmnElementCode=" + bpmnElementCode + " includedUseCases=" + includedUseCases + '}';
+    }
    
 }

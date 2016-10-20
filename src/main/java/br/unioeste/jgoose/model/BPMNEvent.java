@@ -56,6 +56,19 @@ public class BPMNEvent extends BPMNElement{
         return "BPMNEvent{" + "eventType=" + this.eventType + '}' + super.toString();
     }  
     
+    public boolean isStartEvent(){
+        if(this.getEventType().equals(BPMNEvent.START)  ||
+            this.getEventType().equals(BPMNEvent.START_LINK)  ||
+            this.getEventType().equals(BPMNEvent.START_MESSAGE)  ||
+            this.getEventType().equals(BPMNEvent.START_MULTIPLE)  ||
+            this.getEventType().equals(BPMNEvent.START_RULE)  ||
+            this.getEventType().equals(BPMNEvent.START_TIMER)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+    
     public boolean isEndEvent(){
         if(this.getEventType().equals(BPMNEvent.END)  ||
             this.getEventType().equals(BPMNEvent.END_CANCEL)  ||

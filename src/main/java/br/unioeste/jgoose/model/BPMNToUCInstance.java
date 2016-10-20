@@ -14,9 +14,11 @@ public class BPMNToUCInstance {
     private BPMNElement originator; // Elemento que originou a instância
     private BPMNElement next; // Próximo elemento
     private Boolean subprocess; // Marcador de sub-processo
+    private Boolean messageFlow; // Marcador que indica instância proveniente de fluxo de mensagem
     private Boolean finished; // Instância avaliada
     
     public BPMNToUCInstance() {
+        messageFlow = false;
         subprocess = false;
         finished = false;
     }
@@ -53,6 +55,14 @@ public class BPMNToUCInstance {
         this.next = next;
     }
 
+    public Boolean getMessageFlow() {
+        return messageFlow;
+    }
+
+    public void setMessageFlow(Boolean messageFlow) {
+        this.messageFlow = messageFlow;
+    }        
+
     public Boolean getSubprocess() {
         return subprocess;
     }
@@ -71,12 +81,12 @@ public class BPMNToUCInstance {
     
     @Override
     public String toString() {
-        return "\tBPMNToUCInstance{" + 
-                "\n\tinstanceID=" + instanceCode + 
-                "\n\toriginator=" + originator +
-                "\n\tnext=" + next +
-                "\n\tsubprocess=" + subprocess + 
-                "\n\tfinished=" + finished + 
+        return "\n\tBPMNToUCInstance{" + 
+                " - instanceID=" + instanceCode + 
+                " - toriginator=" + originator.getLabel() +
+                " - next=" + next.getLabel() +
+                " - subprocess=" + subprocess + 
+                " - finished=" + finished + 
                 "\n}";
     }        
     
