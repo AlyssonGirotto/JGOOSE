@@ -16,8 +16,9 @@ import java.util.List;
 public class UCActor {
     
     private String code;
+    private String bpmnElementoCode;
     private String name;
-    private List<UseCase> useCases; 
+    private List<UCUseCase> useCases; 
     private UCActor father;
     private List<UCActor> children;
 
@@ -35,6 +36,14 @@ public class UCActor {
         this.code = code;
     }
 
+    public String getBpmnElementoCode() {
+        return bpmnElementoCode;
+    }
+
+    public void setBpmnElementoCode(String bpmnElementoCode) {
+        this.bpmnElementoCode = bpmnElementoCode;
+    }
+
     public String getName() {
         return name;
     }
@@ -43,14 +52,18 @@ public class UCActor {
         this.name = name;
     }
 
-    public List<UseCase> getUseCases() {
+    public List<UCUseCase> getUseCases() {
         return useCases;
     }
 
-    public void setUseCases(List<UseCase> useCases) {
+    public void setUseCases(List<UCUseCase> useCases) {
         this.useCases = useCases;
     }
 
+    public void addUseCase(UCUseCase useCase){
+        this.useCases.add(useCase);
+    }
+    
     public UCActor getFather() {
         return father;
     }
@@ -74,10 +87,11 @@ public class UCActor {
     @Override
     public String toString() {
         return "\nUCActor{" + 
-                    "\n\tcod=" + code + 
-                    "\n\tname=" + name + 
-                    "\n\t\tuseCases=" + useCases +
-                    "\n\t\tchildren=" + children +
+                    "\tcod=" + code + 
+                    "\tbpmn cod=" + bpmnElementoCode + 
+                    "\tname=" + name + 
+                    "\t\tuseCases=" + useCases +
+                    "\t\tchildren=" + children +
                 '}';
     }
     

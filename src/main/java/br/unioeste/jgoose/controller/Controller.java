@@ -31,7 +31,6 @@ public class Controller {
      * Método que controla o mapeamento dos casos de uso
      */
     public static void mapUseCases() {
-        System.out.println("COntroller - new Mapping()");
         mapping = new Mapping();
         try {
             mapping.mappingStep1();

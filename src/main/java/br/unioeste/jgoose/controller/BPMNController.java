@@ -8,6 +8,7 @@ package br.unioeste.jgoose.controller;
 import br.unioeste.jgoose.BPMNToUC.MappingBPMNToUC;
 import br.unioeste.jgoose.model.TokensBPMN;
 import br.unioeste.jgoose.view.MainView;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,7 +17,21 @@ import br.unioeste.jgoose.view.MainView;
 public class BPMNController {
     
     private static TokensBPMN tokensBPMN;
+    private static MappingBPMNToUC mappingBPMNToUC;
     private static MainView mainView = new MainView();
+    
+    /*
+     * Método que controla o mapeamento dos casos de uso
+     */
+    public static void mapUseCases() {
+        mappingBPMNToUC = new MappingBPMNToUC();
+        try {
+            mappingBPMNToUC.derivation();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error in Mapping of Use Cases!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     public static TokensBPMN getTokensBPMN(){
         return tokensBPMN;

@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
 public class MainView extends javax.swing.JFrame {
 
     private UseCasesView useCasesView = null;
+    private UseCasesViewBPMN useCasesViewBPMN = null;
     private static final Logger LOG = Logger.getLogger("console");
     private EditorJFrame E4JiStar = null;
     private EditorJFrame E4JUseCases = null;
@@ -490,7 +491,13 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_helpGuidelinesActionPerformed
 
     private void buttonBPMNToUseCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBPMNToUseCasesActionPerformed
-        JOptionPane.showMessageDialog(this, "Funcionalidade em desenvolvimento", "Atenção", JOptionPane.WARNING_MESSAGE);
+        BPMNController.mapUseCases();
+        if (useCasesViewBPMN == null) {
+            useCasesViewBPMN = new UseCasesViewBPMN();
+            useCasesViewBPMN.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        }
+        useCasesViewBPMN.updateTable();
+        useCasesViewBPMN.setVisible(true);        
     }//GEN-LAST:event_buttonBPMNToUseCasesActionPerformed
 
     private void toolsOpenE4JEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolsOpenE4JEditorActionPerformed
