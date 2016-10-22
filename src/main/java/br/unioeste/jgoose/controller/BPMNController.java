@@ -7,7 +7,10 @@ package br.unioeste.jgoose.controller;
 
 import br.unioeste.jgoose.BPMNToUC.MappingBPMNToUC;
 import br.unioeste.jgoose.model.TokensBPMN;
+import br.unioeste.jgoose.model.UCActor;
+import br.unioeste.jgoose.model.UCUseCase;
 import br.unioeste.jgoose.view.MainView;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -52,5 +55,13 @@ public class BPMNController {
         MappingBPMNToUC bpmnToUC = new MappingBPMNToUC();
         bpmnToUC.derivation();
         
+    }
+    
+    public static List<UCActor> getActors(){
+        return mappingBPMNToUC.getActors();
+    }
+    
+    public static List<UCUseCase> getUseCases(){
+        return mappingBPMNToUC.getUseCases();
     }
 }

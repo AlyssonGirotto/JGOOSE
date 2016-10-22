@@ -20,9 +20,15 @@ public class UCUseCase {
     private Integer instanceCod;
     private String bpmnElementCode;
     private List<UCUseCase> includedUseCases; //Código dos casos de uso incluídos
-
+    private UCUseCaseDescription description;
+    private UCActor primaryActor;
+    private List<UCActor> secondaryActors;
+    
     public UCUseCase() {
         includedUseCases = new ArrayList<>();
+        description = new UCUseCaseDescription();
+        primaryActor = new UCActor();
+        secondaryActors = new ArrayList<>();
     }
 
     public Integer getCode() {
@@ -77,13 +83,37 @@ public class UCUseCase {
         this.includedUseCases.add(useCase);
     }
 
+    public UCUseCaseDescription getDescription() {
+        return description;
+    }
+
+    public void setDescription(UCUseCaseDescription description) {
+        this.description = description;
+    }
+
+    public UCActor getPrimaryActor() {
+        return primaryActor;
+    }
+
+    public void setPrimaryActor(UCActor primaryActor) {
+        this.primaryActor = primaryActor;
+    }
+
+    public List<UCActor> getSecondaryActors() {
+        return secondaryActors;
+    }
+
+    public void setSecondaryActors(List<UCActor> secondaryActors) {
+        this.secondaryActors = secondaryActors;
+    }        
+    
     @Override
     public String toString() {
         return ("Cod: " + code + " Name: " + name);
     }
     
     public String printAllInfo(){
-        return "\n\tCode=" + code + " Name=" + name + " guidelineUsed=" + guidelineUsed + " instanceCod=" + instanceCod + " bpmnElementCode=" + bpmnElementCode + " includedUseCases=" + includedUseCases + '}';
+        return "\n\tCode=" + code + " Name=" + name + " guidelineUsed=" + guidelineUsed + " instanceCod=" + instanceCod + " bpmnElementCode=" + bpmnElementCode + " includedUseCases=" + includedUseCases + "description= " + description + '}';
     }
    
 }

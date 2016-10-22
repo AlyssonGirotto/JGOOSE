@@ -10,11 +10,13 @@ import br.unioeste.jgoose.model.BPMNActivity;
 import br.unioeste.jgoose.model.BPMNArtifact;
 import br.unioeste.jgoose.model.BPMNElement;
 import br.unioeste.jgoose.model.BPMNEvent;
+import br.unioeste.jgoose.model.BPMNGateway;
 import br.unioeste.jgoose.model.BPMNLink;
 import br.unioeste.jgoose.model.BPMNParticipant;
 import br.unioeste.jgoose.model.BPMNToUCInstance;
 import br.unioeste.jgoose.model.UCActor;
 import br.unioeste.jgoose.model.UCUseCase;
+import br.unioeste.jgoose.model.UCUseCaseDescription;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,10 +50,13 @@ public class MappingBPMNToUC {
     }
 
     public void derivation() {
+        // Etapa 1 - Obtenção da representação diagramática
         searchActors();
         searchInitialInstances();
         searchUseCases();
-
+        
+        // Etapa 2 é chamada dentro da etapa de procurar Casos de Uso
+        
         for(BPMNToUCInstance instance : instances){
             System.out.println(instance.toString());
         }
@@ -62,6 +67,7 @@ public class MappingBPMNToUC {
         
         for(UCUseCase useCase : useCases){
             System.out.println(useCase.printAllInfo());
+            System.out.println(useCase.getDescription().toString());
         }
     }
 
@@ -353,9 +359,11 @@ public class MappingBPMNToUC {
         useCase.setInstanceCod(countInstance);
         useCase.setGuidelineUsed(guidelineUsed);
         useCase.setBpmnElementCode(activity.getCode());
+                        
+        setTextualDescription(useCase, activity);
         
         useCases.add(useCase);
-        
+
         // Associa o caso de utor com o respectivo ator primário - swimlane na qual atividade está contida
         associatesUseCaseActor(activity);
         
@@ -370,6 +378,7 @@ public class MappingBPMNToUC {
                 }
             }
         }
+                
     }
     
     //Dada a atividade originadora e a respectiva diretriz, adiciona um caso de uso
@@ -455,5 +464,129 @@ public class MappingBPMNToUC {
             }            
         }
 
+    }
+    
+    // Etapa 2 - Para cada Caso de Uso identifica anteriormente, obtém as representações textuais
+    private void setTextualDescription(UCUseCase useCase, BPMNActivity activity){
+        
+        UCUseCaseDescription description = new UCUseCaseDescription();
+
+        // Passo 1 - Preenchimento do cabeçalho
+        description.setName(useCase.getCode() + " - " + useCase.getName());
+
+        // Passo 2 - Associação com atores
+        //TODO
+
+        // Passo 3 - Gatilhos
+        description.setTrigger(getTriggers(activity));
+
+        // Passo 4 - Pré-condições relacionadas com atividades
+        description.setPreConditions(getPreConditionsActivities(activity));
+
+        // Passo 5 - Pré-condições relacionadas com gateways
+        description.setPreConditions(getPreConditionsGateways(activity));
+        
+        // Atualiza as informações no Caso de Uso recentemente adicionado
+        useCase.setDescription(description);                        
+    }
+    
+    // Passo 3 - Analisa gatilhos relacionados com o Caso de Uso
+    private String getTriggers(BPMNActivity activity){
+        
+        // Percorre links direcionados à atividade
+        for(BPMNLink link : activity.getLinksTo()){
+            // Verifica se é fluxo de sequência proveniente de um evento
+            if(link.getType() == BPMNLink.SEQUENCE && (link.getFrom() instanceof BPMNEvent)){
+                BPMNEvent event = (BPMNEvent) link.getFrom();
+                
+                // Verifica se é um evento de início
+                if(event.isStartEvent()){ // Origina um gatilho
+                
+                    // Evento de mensagem
+                    if(event.getEventType().equals(BPMNEvent.START_MESSAGE)){
+                        return ("A mensagem " + link.getLabel() + " chegou de " + link.getFrom().getLabel() + ".");
+                    }
+                    
+                    // Evento com temporizador
+                    if(event.getEventType().equals(BPMNEvent.START_TIMER)){
+                        return ("O tempo/data " + event.getLabel() + " foi alcançado.");
+                    }
+                    
+                    // Evento com condicional
+                    if(event.getEventType().equals(BPMNEvent.START_RULE)){
+                        return ("A condição " + link.getLabel() + " tornou-se verdadeira.");
+                    }
+                                        
+                    // Evento múltiplo
+                    if(event.getEventType().equals(BPMNEvent.START_MULTIPLE)){
+                        // TODO Modificar
+                        return ("O evento " + event.getLabel() + " ocorreu."); 
+                    }
+                    
+                    return ("O evento " + event.getLabel() + " ocorreu.");
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    // Passo 4 - Pré-condições geradas por atividades relacionadas com o Caso de Uso
+    private String getPreConditionsActivities(BPMNActivity activity){
+        String preConditions = "";
+        
+        // Percorre links direcionados à atividade
+        for(BPMNLink link : activity.getLinksTo()){
+            // Verifica se é fluxo de sequência proveniente de uma atividade
+            if(link.getType() == BPMNLink.SEQUENCE && (link.getFrom() instanceof BPMNActivity)){
+                preConditions += "Atividade " + link.getFrom().getLabel() + " deve ser concluída; ";                
+            }
+        }
+        
+        return preConditions;
+    }
+    
+    // Passo 5 - Pré-condições geradas por gateways
+    private String getPreConditionsGateways(BPMNActivity activity){
+        String preConditions = "";
+        
+        // Percorre links direcionados à atividade
+        for(BPMNLink link : activity.getLinksTo()){
+            // Verifica se é fluxo de sequência proveniente de uma atividade
+            if(link.getType() == BPMNLink.SEQUENCE && (link.getFrom() instanceof BPMNGateway)){
+                BPMNGateway gateway = (BPMNGateway) link.getFrom();
+                                
+                // Exclusive Gateway - DRT11 ou DRT14
+                if(gateway.getGatewayType().equals(BPMNGateway.EXCLUSIVE)){
+                    // DRT11 É gateway de divergência
+                    if(gateway.getLinksFrom().size() > 1){
+                        preConditions += "Condição do gateway " + gateway.getLabel() + " ser " + link.getLabel() + "; ";
+                    }else{ // DRT14
+                        preConditions += "Uma das atividades ";
+                        for(int i = 0; i < gateway.getLinksTo().size(); i++){
+                            if(i < gateway.getLinksTo().size() - 1)
+                                preConditions += gateway.getLinksTo().get(i).getLabel() + " ou ";
+                            else 
+                                preConditions += gateway.getLinksTo().get(i).getLabel() + " ";
+                        }
+                        preConditions += "tiver sido concluída.";
+                    }
+                }
+                
+                preConditions += "Atividade " + link.getFrom().getLabel() + " deve ser concluída; ";                
+            }
+        }
+        
+        return preConditions;
+    }
+    
+    // Retorna atores obtidos
+    public List<UCActor> getActors(){
+        return actors;
+    }
+    
+    // Retorna Casos de uso obtidos
+    public List<UCUseCase> getUseCases(){
+        return useCases;
     }
 }

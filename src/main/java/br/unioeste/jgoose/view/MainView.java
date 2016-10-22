@@ -232,8 +232,8 @@ public class MainView extends javax.swing.JFrame {
         });
 
         buttonBPMNToUseCases.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        buttonBPMNToUseCases.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/usecases_32x32.png"))); // NOI18N
-        buttonBPMNToUseCases.setText("BPMN to Use Cases");
+        buttonBPMNToUseCases.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/toUC_32x32.png"))); // NOI18N
+        buttonBPMNToUseCases.setText("Mapping BPMN to Use Cases");
         buttonBPMNToUseCases.setToolTipText("Derivar Casos de Uso a partir de BPMN");
         buttonBPMNToUseCases.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
