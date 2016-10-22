@@ -83,4 +83,20 @@ public class BPMNEvent extends BPMNElement{
             return false;
         }
     }
+    
+    public boolean isIntermediateEvent() {
+        if(this.getEventType().equals(BPMNEvent.INTERMEDIATE) ||
+            this.getEventType().equals(BPMNEvent.INTERMEDIATE_CANCEL) ||
+            this.getEventType().equals(BPMNEvent.INTERMEDIATE_COMPENSATION) ||
+            this.getEventType().equals(BPMNEvent.INTERMEDIATE_ERROR) ||
+            this.getEventType().equals(BPMNEvent.INTERMEDIATE_LINK) ||
+            this.getEventType().equals(BPMNEvent.INTERMEDIATE_MESSAGE) ||
+            this.getEventType().equals(BPMNEvent.INTERMEDIATE_MULTIPLE) ||
+            this.getEventType().equals(BPMNEvent.INTERMEDIATE_RULE) ||
+            this.getEventType().equals(BPMNEvent.INTERMEDIATE_TIMER)){
+            return true;
+        }
+        
+        return false;
+    }
 }

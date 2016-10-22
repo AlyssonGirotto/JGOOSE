@@ -1,18 +1,11 @@
 package br.unioeste.jgoose.view;
 
 import br.unioeste.jgoose.UseCases.Actor;
-import br.unioeste.jgoose.UseCases.ActorISA;
-import br.unioeste.jgoose.UseCases.Extend;
-import br.unioeste.jgoose.UseCases.NFR;
-import br.unioeste.jgoose.UseCases.Step;
-import br.unioeste.jgoose.UseCases.UseCase;
 import br.unioeste.jgoose.controller.BPMNController;
-import br.unioeste.jgoose.controller.Controller;
 import br.unioeste.jgoose.controller.EditorWindowListener;
 import br.unioeste.jgoose.e4j.filters.ShapeFilenameFilter;
 import br.unioeste.jgoose.e4j.swing.BasicUseCasesEditor;
 import br.unioeste.jgoose.e4j.swing.EditorJFrame;
-import br.unioeste.jgoose.model.FiltroDOC;
 import br.unioeste.jgoose.model.UCActor;
 import br.unioeste.jgoose.model.UCUseCase;
 import br.unioeste.jgoose.util.IStarUtils;
@@ -25,14 +18,11 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -132,86 +122,66 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
     }
 
     private void tabelUseCasesValueChanged(ListSelectionEvent evt) {
+        
+        System.out.println("Clicou na tabela");
+        
         buttonDelete.setEnabled(true);
         buttonDiagram.setEnabled(true);
+        
         int linha = tabelUseCases.getSelectedRow();
         if (linha != -1) {
-            labelCasosDeUso.setText("Specification of the Use Case");
+            labelCasosDeUso.setText("Especificação do Caso de Uso");
             textUseCases.setText(""); // limpa o painel de texto
+            
             // define o objeto com formatação negrito negrito
             SimpleAttributeSet negrito = new SimpleAttributeSet();
             StyleConstants.setBold(negrito, true);
-            //StyleConstants.setForeground(setNegrito, Color.RED); 
-            //serve para definir uma cor ao texto tb.. (nao serve para sua dúvida.. m
-            //as vale pro futuro se precisar. Nesse caso, a cor ficaria com a cor VERMELHA) 
-
+            
             // insere os dados do caso de uso selecionado
-            Actor actor = Controller.getActor("" + tabelUseCases.getValueAt(linha, 1));
-            setSelectedActor(actor);
-            setSelectedCase("" + tabelUseCases.getValueAt(linha, 2));
-            insertStyle("Use Case: " + tabelUseCases.getValueAt(linha, 2) + "\n\n", negrito);
-            insertStyle("CHARACTERISTIC INFORMATION\n", negrito);
-            insertStyle("	Goal in Context:\n", null);
-            insertStyle("	Scope:\n", null);
-            insertStyle("	Preconditions:\n", null);
-            insertStyle("	Success End Condition:\n", null);
-            insertStyle("	Failed End Condition:\n", null);
-            insertStyle("	Primary Actor: " + tabelUseCases.getValueAt(linha, 1) + "\n", null);
-            insertStyle("\nMAIN SUCESS SCENARIO\n", negrito);
-            UseCase caso = actor.getUseCase("" + tabelUseCases.getValueAt(linha, 2));
-            if (caso.getSteps().isEmpty()) {
-//                insertStyle("	1. Description Step 1 [<< include >> optional]\n", null);
-//                insertStyle("	2. Description Step 2 [<< include >> optional]\n", null);
-//                insertStyle("	3. Description Step 3 [<< include >> optional]\n", null);
-//                insertStyle("	4. Description Step 4 [<< include >> optional]\n", null);
-                insertStyle("\nEXTENSIONS\n", negrito);
-//                insertStyle("	2.1. Extension Step 2 << extend >>\n", null);
-//                insertStyle("	2.2. Extension Step 2 << extend >>\n", null);
-//                insertStyle("	3.1. Extension Step 3 << extend >>\n", null);
-            } else {
-                int cont = 1;
-                int n = caso.getSteps().size();
-                Step step;
-                for (int i = n - 1; i >= 0; i--) {
-                    step = caso.getSteps().get(i);
-                    String name = step.getName().replaceAll("\"", "");
-                    if (step.getExtends().isEmpty()) {
-                        if (step.isInclude()) {
-                            name += " << include >> ";
-                        }
-                        insertStyle("	" + cont++ + ". " + name + "\n", null);
-                    } else {
-                        int m = step.getExtends().size() - 1;
-                        name += " " + step.getExtend(m).getName().replaceAll("\"", "");
-                        if (step.isInclude()) {
-                            name += " << include >> ";
-                        }
-                        insertStyle("	" + cont++ + ". " + name + "\n", null);
-                    }
-                }
-                insertStyle("\nEXTENSIONS\n", negrito);
-                int aux = caso.getSteps().size();
-                cont = 1;
-                for (int i = n - 1; i >= 0; i--) {
-                    step = caso.getSteps().get(i);
-                    Extend extend;
-                    n = step.getExtends().size();
-                    if (n < 2) {
-                        aux--;
-                    } else {
-                        for (int j = n - 2; j >= 0; j--) {
-                            extend = step.getExtend(j);
-                            insertStyle("	" + cont + "." + (n - j - 1) + ". " + extend.getName().replaceAll("\"", "") + " << extend >>\n", null);
-                        }
-                    }
-                    cont++;
-//                    if (aux == 0) {
-//                        insertStyle("	2.1. Extension Step 2 << extend >>\n", null);
-//                        insertStyle("	2.2. Extension Step 2 << extend >>\n", null);
-//                        insertStyle("	3.1. Extension Step 3 << extend >>\n", null);
-//                    }
-                }
+            UCUseCase useCase = BPMNController.getUseCases().get(linha);
+            
+            insertStyle("Caso de Uso: ", negrito);
+            insertStyle(useCase.getDescription().getName() +  "\n\n", null);
+            
+            insertStyle("INFORMAÇÃO CARACTERÍSTICA\n", negrito);
+            insertStyle("	Objetivo no contexto: ", negrito);
+            insertStyle(useCase.getDescription().getGoal() + "\n", null);
+            insertStyle("	Escopo: ", negrito);
+            insertStyle(useCase.getDescription().getScope() + "\n", null);
+            insertStyle("	Pré-condições: ", negrito);
+            insertStyle(useCase.getDescription().getPreConditions() +  "\n", null);
+            insertStyle("	Condição Final de Sucesso: ", negrito);
+            insertStyle(useCase.getDescription().getEndSucess() +  "\n", null);
+            insertStyle("	Condição Final de Falha: ", negrito);
+            insertStyle(useCase.getDescription().getEndFailure() + "\n", null);
+            insertStyle("	Gatilho: ", negrito);
+            insertStyle(useCase.getDescription().getTrigger() + "\n", null);
+            insertStyle("	Ator primário: ", negrito);
+            insertStyle(useCase.getDescription().getPrimaryActor() + "\n", null);
+            
+            insertStyle("\nCENÁRIO PRINCIPAL DE SUCESSO\n", negrito);  
+            int i = 1;
+            for(String sentence : useCase.getDescription().getScenario()){
+                insertStyle("<passo " + i++ + "> - " + sentence + "\n", null);
             }
+            
+            insertStyle("\nEXTENSÕES\n", negrito);  
+            
+            insertStyle("\nINFORMAÇÃO RELACIONADA\n", negrito);                        
+            insertStyle("	Prioridade: ", negrito);
+            insertStyle(useCase.getDescription().getPriority()+ "\n", null);
+            insertStyle("	Desempenho alvo: ", negrito);
+            insertStyle(useCase.getDescription().getPerformance()+ "\n", null);
+            insertStyle("	Frequência: ", negrito);
+            insertStyle(useCase.getDescription().getFrequency()+ "\n", null);
+            insertStyle("	Caso de Uso pai: ", negrito);
+            insertStyle(useCase.getDescription().getUseCaseFather() + "\n", null);
+            insertStyle("	Casos de Uso incluídos: ", negrito);
+            insertStyle(useCase.getDescription().getIncludedUseCases()+ "\n", null);
+            insertStyle("	Atores secundários: ", negrito);
+            insertStyle(useCase.getDescription().getSecondaryActors()+ "\n", null);
+            insertStyle("	Informação adicional: ", negrito);
+            insertStyle(useCase.getDescription().getAdditionalInformation()+ "\n", null);                                  
         } else {
             textUseCases.setText("");
         }

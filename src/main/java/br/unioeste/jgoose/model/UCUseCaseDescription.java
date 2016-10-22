@@ -32,6 +32,20 @@ public class UCUseCaseDescription {
 
     public UCUseCaseDescription() {
         scenario = new ArrayList<>();
+        goal = "";
+        scope = "";
+        preConditions = "";
+        endSucess = "";
+        endFailure = "";
+        trigger = "";
+        primaryActor = "";
+        priority = "";
+        performance = "";
+        frequency = "";
+        useCaseFather = "";
+        includedUseCases = "";
+        secondaryActors = "";
+        additionalInformation = "";
     }
 
     public String getName() {
