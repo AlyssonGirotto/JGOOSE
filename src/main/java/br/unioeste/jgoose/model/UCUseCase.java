@@ -107,8 +107,10 @@ public class UCUseCase {
         this.secondaryActors = secondaryActors;
     }        
     
-    public void addSecondaryActor(UCActor secondaryActor){
-        this.secondaryActors.add(secondaryActor);                
+    public void addSecondaryActor(UCActor secondaryActor){        
+        if(!this.secondaryActors.contains(secondaryActor)){    
+            this.secondaryActors.add(secondaryActor);         
+        }
     }
     
     @Override

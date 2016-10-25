@@ -69,6 +69,8 @@ public class MappingBPMNToUC {
             }
         }
         
+        // Prints teste
+        /*
         for (BPMNToUCInstance instance : instances) {
             System.out.println(instance.toString());
         }
@@ -81,6 +83,7 @@ public class MappingBPMNToUC {
             System.out.println(useCase.printAllInfo());
             System.out.println(useCase.getDescription().toString());
         }
+        */
     }
 
     // Categoria 1 - Identificação dos atores
@@ -282,6 +285,7 @@ public class MappingBPMNToUC {
                                             // Adiciona o Caso de Uso à lista de Incluídos
                                             useCase.addIncludedUseCase(ucIncluded);
                                             useCase.addSecondaryActor(ucIncluded.getPrimaryActor()); // DRD13 - Seta o ator secundário
+                                            ucIncluded.addSecondaryActor(useCase.getPrimaryActor());
                                         }
                                         break;
                                     }
@@ -392,15 +396,16 @@ public class MappingBPMNToUC {
         useCase.setGuidelineUsed(guidelineUsed);
         useCase.setBpmnElementCode(activity.getCode());
         useCase.addIncludedUseCase(ucIncluded);
-        useCase.addSecondaryActor(ucIncluded.getPrimaryActor());
-        
-        // DRD13 - Vincula o Caso de Uso ao ator secundário
-        ucIncluded.getPrimaryActor().addUseCase(useCase);                
+        useCase.addSecondaryActor(ucIncluded.getPrimaryActor());                
         
         useCases.add(useCase);
 
         // Associa o caso de utor com o respectivo ator primário - swimlane na qual atividade está contida
         associatesUseCaseActor(activity, useCase);
+        
+        // DRD13 - Vincula o Caso de Uso ao ator secundário
+        ucIncluded.getPrimaryActor().addUseCase(useCase);                
+        ucIncluded.addSecondaryActor(useCase.getPrimaryActor());
     }
 
     //Avalia subprocess
@@ -472,6 +477,38 @@ public class MappingBPMNToUC {
 
     }
 
+    // Retorna nome do ator (swimlane) na qual se encontra um dado elemento
+    private String getActorFather(BPMNElement bPMNElement){
+        
+        // Verifica se o pai proveniente de swimlane -> já mapeado para Ator
+        for (UCActor actor : actors) {
+            if (bPMNElement.getParent().equals(actor.getBpmnElementoCode())) {
+                return actor.getName();
+            }
+        }
+
+        // Verifica se o pai é um subprocesso
+        // Percorre as activities obtidas
+        for (BPMNActivity activity : BPMNController.getTokensBPMN().getActivities()) {
+            if (activity.getActivityType().equals(BPMNActivity.SUBPROCESS)) { // é subprocesso
+                if (bPMNElement.getParent().equals(activity.getCode())) { // está contida no subprocesso
+                    return getActorFather(activity); // Chama procedimento novamente
+                }
+            }
+        }
+
+        // Está contida em um grupo        
+        // Percorre os artifacts obtidos, a fim de obter o objeto no qual está contido
+        for (BPMNArtifact artifact : BPMNController.getTokensBPMN().getArtifacts()) {
+            if (bPMNElement.getParent().equals(artifact.getCode())) { // está contida no grupo
+                // Chama novamente o processo para identificar o elemento no qual o grupo está inserido
+                return getActorFather(artifact);
+            }
+        }
+        
+        return "";
+    }
+
     // Etapa 2 - Para cada Caso de Uso identificado anteriormente, obtém as representações textuais
     private void setTextualDescription(UCUseCase useCase, BPMNActivity activity) {
 
@@ -481,7 +518,8 @@ public class MappingBPMNToUC {
         description.setName((useCase.getCode()+1) + " - " + useCase.getName());
 
         // Passo 2 - Associação com atores
-        description.setPrimaryActor(useCase.getPrimaryActor().getName());
+        if(useCase.getPrimaryActor().getName() != null)
+            description.setPrimaryActor(useCase.getPrimaryActor().getName());
         description.setSecondaryActors(getSecondaryActors(useCase));
         
         // Passo 3 - Gatilhos
@@ -523,6 +561,10 @@ public class MappingBPMNToUC {
     private String getSecondaryActors(UCUseCase useCase){
         String secondaryActors = "";
         
+        for(UCActor actor : useCase.getSecondaryActors()){
+            secondaryActors += actor.getName() + "; ";
+        }
+        
         return secondaryActors;
     }
     
@@ -539,8 +581,8 @@ public class MappingBPMNToUC {
                 if (event.isStartEvent()) { // Origina um gatilho
 
                     // Evento de mensagem
-                    if (event.getEventType().equals(BPMNEvent.START_MESSAGE)) {
-                        return ("A mensagem " + link.getLabel() + " chegou de " + link.getFrom().getLabel() + ".");
+                    if (event.getEventType().equals(BPMNEvent.START_MESSAGE)) {                        
+                        return ("A mensagem " + link.getFrom().getLabel() + " chegou de " + getActorFather(link.getFrom().getLinksTo().get(0).getFrom()) + ".");
                     }
 
                     // Evento com temporizador
@@ -550,7 +592,7 @@ public class MappingBPMNToUC {
 
                     // Evento com condicional
                     if (event.getEventType().equals(BPMNEvent.START_RULE)) {
-                        return ("A condição " + link.getLabel() + " tornou-se verdadeira.");
+                        return ("A condição " + link.getFrom().getLabel() + " tornou-se verdadeira.");
                     }
 
                     // Evento múltiplo
@@ -674,10 +716,22 @@ public class MappingBPMNToUC {
         
         // Percorre links chegando na atividade
         for (BPMNLink link : activity.getLinksTo()) {
+            
             // Verifica se é fluxo de mensagem proveniente de atividade
-            if (link.getType() == BPMNLink.MESSAGE && (link.getFrom() instanceof BPMNActivity)) {
-                sentences.add("Recebeu " + link.getLabel() + " de " + link.getFrom().getLabel());                
-            }
+            if (link.getType() == BPMNLink.MESSAGE ) {
+                String sentence = "";
+                
+                if(link.getFrom() instanceof BPMNEvent)
+                    sentence = "Recebeu " + link.getLabel() + " de " + getActorFather(link.getFrom().getLinksTo().get(0).getFrom());                
+                else    
+                    sentence = "Recebeu " + link.getLabel() + " de " + getActorFather(link.getFrom());                
+            
+                if(link.getFrom() instanceof BPMNActivity){
+                    sentence += " - <<include>> " + link.getFrom().getLabel();
+                }               
+                
+                sentences.add(sentence);
+            }              
         }        
         
     }   
@@ -720,11 +774,11 @@ public class MappingBPMNToUC {
     
     // Passo 7.4 - Mensagens enviadas para outras atividades
     private void getMessagesSent(BPMNActivity activity, List<String> sentences){                
-        // Percorre links saindo da atividade
-        for (BPMNLink link : activity.getLinksFrom()) {
+        // Percorre links saindo da atividade               
+        for (BPMNLink link : activity.getLinksFrom()) {            
             // Verifica se é fluxo de mensagem destinado à outra atividade
-            if (link.getType() == BPMNLink.MESSAGE && (link.getTo() instanceof BPMNActivity)) {
-                sentences.add("Enviou " + link.getLabel() + " para " + link.getTo().getLabel());                
+            if (link.getType() == BPMNLink.MESSAGE) {
+                sentences.add("Enviou " + link.getLabel() + " para " + getActorFather(link.getTo()));                
             }
         }
     }   
@@ -734,11 +788,9 @@ public class MappingBPMNToUC {
         
         for(UCUseCase uc : useCases){
             if(uc.getIncludedUseCases().contains(useCase)){ // Inclui o caso de uso atual
-                System.out.println("\n\n\n\nasasasasasa");
                 return uc.getName();
             }
         }
-        
         return "";
     }
         
