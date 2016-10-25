@@ -67,7 +67,7 @@ public class BPMNEvent extends BPMNElement{
         } else{
             return false;
         }
-    }
+    }   
     
     public boolean isEndEvent(){
         if(this.getEventType().equals(BPMNEvent.END)  ||

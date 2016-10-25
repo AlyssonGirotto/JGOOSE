@@ -107,6 +107,10 @@ public class UCUseCase {
         this.secondaryActors = secondaryActors;
     }        
     
+    public void addSecondaryActor(UCActor secondaryActor){
+        this.secondaryActors.add(secondaryActor);                
+    }
+    
     @Override
     public String toString() {
         return ("Cod: " + code + " Name: " + name);

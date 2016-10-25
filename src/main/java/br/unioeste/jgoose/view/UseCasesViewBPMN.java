@@ -68,34 +68,36 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
         DefaultTableModel tabCasosDeUso = new DefaultTableModel();
         tabCasosDeUso.addColumn("ID"); // 0
         tabCasosDeUso.addColumn("Use Case");
-        tabCasosDeUso.addColumn("Actor"); // 2
+        tabCasosDeUso.addColumn("Primary actor"); // 2
+        tabCasosDeUso.addColumn("Secondary actors"); // 3       
         tabCasosDeUso.addColumn("Included");
-        tabCasosDeUso.addColumn("Guideline"); // 4
-        String vetCasosDeUso[] = new String[5];
+        tabCasosDeUso.addColumn("Guideline"); // 5
+        String vetCasosDeUso[] = new String[6];
         int cont = 1;
         
         // adiciona os dados dos casos de uso no modelo da tabela
         for(UCUseCase useCase : BPMNController.getUseCases()){
             vetCasosDeUso[0] = "" + cont++;
             vetCasosDeUso[1] = useCase.getName();
+                                    
+            vetCasosDeUso[2] = useCase.getPrimaryActor().getName();
             
             String actors = "";
             // Percorre os atores, identificando atores associados ao atual
-            for(UCActor actor : BPMNController.getActors()){
-                if(actor.getUseCases().contains(useCase))
-                    actors += actor.getName() + "\n";
+            for(UCActor actor : useCase.getSecondaryActors()){
+                actors += actor.getName() + "; ";
             }
-            vetCasosDeUso[2] = actors;
+            vetCasosDeUso[3] = actors;
             
             String includedUseCases = "";
             // Percorre os casos de usos incluídos
             for(UCUseCase useCaseIncluded : useCase.getIncludedUseCases()){
-                includedUseCases += useCaseIncluded.getCode() + " - " + useCaseIncluded.getName() + "; ";
+                includedUseCases += (useCaseIncluded.getCode()+1) + " - " + useCaseIncluded.getName() + "; ";
             }
             
-            vetCasosDeUso[3] = includedUseCases;
+            vetCasosDeUso[4] = includedUseCases;
             
-            vetCasosDeUso[4] = useCase.getGuidelineUsed();
+            vetCasosDeUso[5] = useCase.getGuidelineUsed();
             
             tabCasosDeUso.addRow(vetCasosDeUso);
         }                       
@@ -104,9 +106,10 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
         // seta a largura das colunas da tabela
         tabelUseCases.getColumnModel().getColumn(0).setPreferredWidth(30);
         tabelUseCases.getColumnModel().getColumn(1).setPreferredWidth(170);
-        tabelUseCases.getColumnModel().getColumn(2).setPreferredWidth(270);
-        tabelUseCases.getColumnModel().getColumn(3).setPreferredWidth(170);
-        tabelUseCases.getColumnModel().getColumn(4).setPreferredWidth(90);
+        tabelUseCases.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tabelUseCases.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tabelUseCases.getColumnModel().getColumn(4).setPreferredWidth(140);
+        tabelUseCases.getColumnModel().getColumn(5).setPreferredWidth(90);
     }
 
     /*
@@ -122,9 +125,7 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
     }
 
     private void tabelUseCasesValueChanged(ListSelectionEvent evt) {
-        
-        System.out.println("Clicou na tabela");
-        
+
         buttonDelete.setEnabled(true);
         buttonDiagram.setEnabled(true);
         
@@ -606,8 +607,7 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
             
             geo.setY(yActor);
             mxCell cell = new mxCell(value, geo, styleActor);
-            cell.setVertex(true);
-            System.out.println("" + cell.getStyle());
+            cell.setVertex(true);            
             actors.put(actor.getCode(), cell);
             graph.addCell(cell);
             

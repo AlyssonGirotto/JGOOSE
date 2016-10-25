@@ -51,11 +51,24 @@ public class MappingBPMNToUC {
 
     public void derivation() {
         // Etapa 1 - Obtenção da representação diagramática
+        
+        // Passo 1 e 2
         searchActors();
+        // Passo 3
         searchInitialInstances();
+        // Passo 4
         searchUseCases();
 
-        // Etapa 2 é chamada dentro da etapa de procurar Casos de Uso
+        // Etapa 2
+        for(UCUseCase useCase : useCases){
+            for(BPMNActivity activity : BPMNController.getTokensBPMN().getActivities()){
+                if(useCase.getBpmnElementCode().equals(activity.getCode())){
+                    setTextualDescription(useCase, activity);
+                    break;
+                }
+            }
+        }
+        
         for (BPMNToUCInstance instance : instances) {
             System.out.println(instance.toString());
         }
@@ -73,7 +86,7 @@ public class MappingBPMNToUC {
     // Categoria 1 - Identificação dos atores
     private void searchActors() {
 
-        // DRD1 - Cada Pool originará um ator
+        // Passo 1 : DRD1 - Cada Pool originará um ator
         for (BPMNParticipant bpmnParticipant : BPMNController.getTokensBPMN().getParticipants()) {
 
             if (bpmnParticipant.getParticipantType().equals(BPMNParticipant.POOL)) {
@@ -86,7 +99,7 @@ public class MappingBPMNToUC {
             }
         }
 
-        // DRD2 - Cada lane originará um ator. Lane será associada com a Pool na qual está inserida
+        // Passo 2: DRD2 - Cada lane originará um ator. Lane será associada com a Pool na qual está inserida
         for (BPMNParticipant bpmnParticipant : BPMNController.getTokensBPMN().getParticipants()) {
             if (bpmnParticipant.getParticipantType().equals(BPMNParticipant.LANE)) {
                 UCActor actor = new UCActor();
@@ -113,17 +126,11 @@ public class MappingBPMNToUC {
         for (BPMNEvent event : BPMNController.getTokensBPMN().getEvents()) {
 
             // É um evento de início
-            if (event.getEventType().equals(BPMNEvent.START)
-                    || event.getEventType().equals(BPMNEvent.START_LINK)
-                    || event.getEventType().equals(BPMNEvent.START_MESSAGE)
-                    || event.getEventType().equals(BPMNEvent.START_MULTIPLE)
-                    || event.getEventType().equals(BPMNEvent.START_RULE)
-                    || event.getEventType().equals(BPMNEvent.START_TIMER)) {
+            if (event.isStartEvent()) {
                 internoSubprocesso = false;
 
                 // Verifica se o evento não é interno a um subprocesso
                 if (event.getParent() != null) {
-                    System.out.println("parent: " + event.getParent());
                     for (BPMNActivity activity : BPMNController.getTokensBPMN().getActivities()) {
                         if (event.getParent().equals(activity.getCode())) {
                             internoSubprocesso = true;
@@ -170,7 +177,7 @@ public class MappingBPMNToUC {
     // Categoria 2
     private void searchUseCases() {
         currentInstance = instances.size() - 1;
-        int countLinks; //conta a quantidade de links de 'saída' de um dado elemento
+        int countLinks; //armazena a quantidade de links de 'saída' de um dado elemento
 
         // Analisa as instâncias (de acordo com a ordem contrária em que foram inseridas, última para primeira)
         while (currentInstance != -1) {
@@ -189,13 +196,13 @@ public class MappingBPMNToUC {
                     if (!avaliationOrder.contains(currentElement.getCode())) { // ainda não foi avaliado
 
                         // Avalia o elemento
-                        if (currentElement instanceof BPMNActivity) {
+                        if (currentElement instanceof BPMNActivity) { // DRD5, 6 ou 7
                             analyzeActivity((BPMNActivity) currentElement);
                         } else if (currentElement instanceof BPMNEvent) {
-                            //analyzeEvent((BPMNEvent) currentElement);
+
                             BPMNEvent event = (BPMNEvent) currentElement;
 
-                            // DRD7 - É evento de fim, deve-se finalizar a instância atual
+                            // DRD9 - É evento de fim, deve-se finalizar a instância atual
                             if (event.isEndEvent()) {
                                 // finaliza avaliação da instância atual
                                 finishCurrentInstance();
@@ -214,7 +221,7 @@ public class MappingBPMNToUC {
                         }
 
                         // Determina qual o próximo elemento a ser avaliado
-                        if (countLinks > 1) { // DRD9 - multiplas instancias devem ser criadas
+                        if (countLinks > 1) { // DRD10 - multiplas instancias devem ser criadas
 
                             //Cria uma nova instância para cada fluxo de saída
                             // 1º - Instancias provenientes de fluxos de sequencia
@@ -244,30 +251,25 @@ public class MappingBPMNToUC {
 
                             // atualiza para próximo elemento da instância sendo avaliada
                             try {
-                                if (currentElement.getLinksFrom().get(0).getType() == BPMNLink.MESSAGE) {
-                                    isMessageFlow = true;
-                                } else {
-                                    isMessageFlow = false;
-                                }
-
-                                currentElement = currentElement.getLinksFrom().get(0).getTo();
+                                isMessageFlow = (currentElement.getLinksFrom().get(0).getType() == BPMNLink.MESSAGE);
+                                currentElement = currentElement.getLinksFrom().get(0).getTo();                                
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                    } else { // elemento já avaliado
+                    } else { // DRD4 ou DRD 8 elemento já avaliado
                         currentElement = instances.get(currentInstance).getNext();
 
                         // Verifica se é uma atividade já avaliada 
-                        if (currentElement instanceof BPMNActivity) {
-
-                            if (instances.get(currentInstance).getMessageFlow()) {
+                        if (currentElement instanceof BPMNActivity) { 
+                                
+                            if (instances.get(currentInstance).getMessageFlow()) { // DRD8 - Atividade já avaliada
                                 UCUseCase ucIncluded = null;
-
+                                
                                 // obtem Caso de Uso gerado pela atividade que inicia o message flow
                                 for (UCUseCase useCase : useCases) {
                                     if (useCase.getBpmnElementCode().equals(instances.get(currentInstance).getOriginator().getCode())) {
-                                        ucIncluded = useCase;
+                                        ucIncluded = useCase;                                        
                                         break;
                                     }
                                 }
@@ -279,6 +281,7 @@ public class MappingBPMNToUC {
                                         if (!useCase.getIncludedUseCases().contains(ucIncluded)) {
                                             // Adiciona o Caso de Uso à lista de Incluídos
                                             useCase.addIncludedUseCase(ucIncluded);
+                                            useCase.addSecondaryActor(ucIncluded.getPrimaryActor()); // DRD13 - Seta o ator secundário
                                         }
                                         break;
                                     }
@@ -318,9 +321,9 @@ public class MappingBPMNToUC {
 
     //Avalia activity
     private void analyzeActivity(BPMNActivity activity) {
-        if (activity.getActivityType().equals(BPMNActivity.TASK)) { // é uma task
+        if (activity.getActivityType().equals(BPMNActivity.TASK)) { // DRD5 ou DRD6 - é uma task
             analyzeTask(activity);
-        } else { //é um subprocess
+        } else { // DRD7 - é um subprocess
             analyzeSubprocess(activity);
         }
     }
@@ -341,12 +344,12 @@ public class MappingBPMNToUC {
             }
 
             if (ucIncluded != null) {
-                addUseCase(activity, "5", ucIncluded);
+                addUseCase(activity, "DRD6", ucIncluded);
                 return;
             }
         }
 
-        addUseCase(activity, "DRD4");
+        addUseCase(activity, "DRD5");
     }
 
     //Dada a atividade originadora e a respectiva diretriz, adiciona um caso de uso
@@ -359,13 +362,11 @@ public class MappingBPMNToUC {
         useCase.setInstanceCod(countInstance);
         useCase.setGuidelineUsed(guidelineUsed);
         useCase.setBpmnElementCode(activity.getCode());
-
-        setTextualDescription(useCase, activity);
-
+        
         useCases.add(useCase);
 
-        // Associa o caso de utor com o respectivo ator primário - swimlane na qual atividade está contida
-        associatesUseCaseActor(activity);
+        // Associa o caso de uso com o respectivo ator primário - swimlane na qual atividade está contida
+        associatesUseCaseActor(activity, useCase);
 
         // Verifica se Caso de Uso foi gerado a partir de uma instância gerada a partir da expansão de um subprocesso
         // Se sim, inclui o Caso de Uso recentemente gerado no campo Casos de Uso Incluídos do Caso de Uso relac. ao subprocesso
@@ -378,7 +379,6 @@ public class MappingBPMNToUC {
                 }
             }
         }
-
     }
 
     //Dada a atividade originadora e a respectiva diretriz, adiciona um caso de uso
@@ -392,19 +392,21 @@ public class MappingBPMNToUC {
         useCase.setGuidelineUsed(guidelineUsed);
         useCase.setBpmnElementCode(activity.getCode());
         useCase.addIncludedUseCase(ucIncluded);
-
-        setTextualDescription(useCase, activity);
+        useCase.addSecondaryActor(ucIncluded.getPrimaryActor());
+        
+        // DRD13 - Vincula o Caso de Uso ao ator secundário
+        ucIncluded.getPrimaryActor().addUseCase(useCase);                
         
         useCases.add(useCase);
 
         // Associa o caso de utor com o respectivo ator primário - swimlane na qual atividade está contida
-        associatesUseCaseActor(activity);
+        associatesUseCaseActor(activity, useCase);
     }
 
     //Avalia subprocess
     private void analyzeSubprocess(BPMNActivity activity) {
         // Adiciona o caso de uso obtido
-        addUseCase(activity, "DRD6");
+        addUseCase(activity, "DRD7");
 
         // adiciona instâncias provenientes de elementos internos ao subprocesso
         for (BPMNEvent bPMNEvent : BPMNController.getTokensBPMN().getEvents()) {
@@ -421,7 +423,7 @@ public class MappingBPMNToUC {
                     instances.add(instance);
                 }
             }
-        }
+        }                
     }
 
     // Retorna Actor com o id informado
@@ -435,14 +437,16 @@ public class MappingBPMNToUC {
         return null;
     }
 
-    // DRD11 - Identifica o ator primário associado ao Caso de Uso
+    // DRD12 - Identifica o ator primário associado ao Caso de Uso
     // Swimlane na qual se encontra a activity que originou o Caso de Uso
-    private void associatesUseCaseActor(BPMNElement bPMNElement) {
+    private void associatesUseCaseActor(BPMNElement bPMNElement, UCUseCase useCase) {
 
         // Verifica se o pai proveniente de swimlane -> já mapeado para Ator
         for (UCActor actor : actors) {
             if (bPMNElement.getParent().equals(actor.getBpmnElementoCode())) {
-                actor.addUseCase(useCases.get(useCases.size() - 1)); // Ultimo caso de uso obtido
+                //actor.addUseCase(useCases.get(useCases.size() - 1)); // Ultimo caso de uso obtido  
+                actor.addUseCase(useCase); // Vincula Caso de Uso ao ator
+                useCase.setPrimaryActor(actor);// Vincula ator ao Caso de Uso                
                 return;
             }
         }
@@ -462,7 +466,7 @@ public class MappingBPMNToUC {
         for (BPMNArtifact artifact : BPMNController.getTokensBPMN().getArtifacts()) {
             if (bPMNElement.getParent().equals(artifact.getCode())) { // está contida no grupo
                 // Chama novamente o processo para identificar o elemento no qual o grupo está inserido
-                associatesUseCaseActor(artifact);
+                associatesUseCaseActor(artifact, useCase);
             }
         }
 
@@ -477,7 +481,8 @@ public class MappingBPMNToUC {
         description.setName((useCase.getCode()+1) + " - " + useCase.getName());
 
         // Passo 2 - Associação com atores
-        //TODO
+        description.setPrimaryActor(useCase.getPrimaryActor().getName());
+        description.setSecondaryActors(getSecondaryActors(useCase));
         
         // Passo 3 - Gatilhos
         description.setTrigger(getTriggers(activity));
@@ -502,9 +507,10 @@ public class MappingBPMNToUC {
         getMessagesSent(activity, description.getScenario());
         
         // Passo 8 - Verifica se o Caso de Uso atualmente gerado é incluído por algum Caso de Uso
-        //TODO description.setUseCaseFather(getUseCaseFather());
+        description.setUseCaseFather(getUseCaseFather(useCase));
         
         // Passo 9 - Verifica se o Caso de Uso atualmente gerado inclui outros Casos de Uso
+        description.setIncludedUseCases(getIncludedUseCases(useCase));
         
         // Passo 10 - Associação com anotações de texto
         description.setAdditionalInformation(getAdditionalInformation(activity));
@@ -513,6 +519,13 @@ public class MappingBPMNToUC {
         useCase.setDescription(description);
     }
 
+    // Passo 2.2 - Obtém atores secundários
+    private String getSecondaryActors(UCUseCase useCase){
+        String secondaryActors = "";
+        
+        return secondaryActors;
+    }
+    
     // Passo 3 - Analisa gatilhos relacionados com o Caso de Uso
     private String getTriggers(BPMNActivity activity) {
 
@@ -715,6 +728,30 @@ public class MappingBPMNToUC {
             }
         }
     }   
+    
+    // Passo 8 - Verifica se o Caso de Uso atualmente gerado é incluído por algum Caso de Uso
+    private String getUseCaseFather(UCUseCase useCase){
+        
+        for(UCUseCase uc : useCases){
+            if(uc.getIncludedUseCases().contains(useCase)){ // Inclui o caso de uso atual
+                System.out.println("\n\n\n\nasasasasasa");
+                return uc.getName();
+            }
+        }
+        
+        return "";
+    }
+        
+     // Passo 9 - Verifica se o Caso de Uso atualmente gerado inclui outros Casos de Uso
+    private String getIncludedUseCases(UCUseCase useCase){
+        String included = "";
+        
+        for(UCUseCase uc : useCase.getIncludedUseCases()){
+            included += uc.getName() + "; ";
+        }
+        
+        return included;
+    }
     
     // Passo 10 - Associação com anotações de texto
     private String getAdditionalInformation(BPMNActivity activity){
