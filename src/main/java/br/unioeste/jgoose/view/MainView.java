@@ -1,7 +1,5 @@
 package br.unioeste.jgoose.view;
 
-import br.unioeste.jgoose.BP2UC.GraphEditor;
-import br.unioeste.jgoose.BP2UC.HelloWorld;
 import br.unioeste.jgoose.controller.BPMNController;
 import br.unioeste.jgoose.controller.Controller;
 import br.unioeste.jgoose.controller.EditorWindowListener;
@@ -1062,26 +1060,38 @@ public class MainView extends javax.swing.JFrame {
      * Abre o Editor E4J BPMN
      */
     private void showE4JBPMN() throws HeadlessException, IOException {
-        if (E4JBPMN == null) {
-            E4JBPMN = new EditorJFrame(2);
-            E4JBPMN.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            EditorWindowListener windowListener = new EditorWindowListener(this, E4JBPMN);
-            this.addWindowListener(windowListener);
-            E4JBPMN.addWindowListener(windowListener);
-            this.addWindowListener(windowListener);
-            editor = (BasicBPMNEditor) E4JBPMN.getEditor();
+        try{
             
-            // get diagram menu bar and shows option to derive Use Cases
-            JMenuBar menubar = E4JBPMN.getJMenuBar();
-            JMenu fileMenu = ((EditorMenuBar) menubar).getFileMenu();
-            String label = mxResources.get("useCaseMaker", null, "Generate Use Cases");
-            JMenuItem menuItem = new JMenuItem(editor.bind(label, new ImportBPMNGraph(E4JBPMN)));
-            fileMenu.add(menuItem, 3);
-            fileMenu.add(new JPopupMenu.Separator(), 4);
-        }                            
-        BPMNController.setMainView(this);
-        E4JBPMN.setVisible(true);
-        this.setVisible(false);
+            if (E4JBPMN == null) {            
+                E4JBPMN = new EditorJFrame(2);
+                E4JBPMN.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                EditorWindowListener windowListener = new EditorWindowListener(this, E4JBPMN);
+                
+                this.addWindowListener(windowListener);
+                E4JBPMN.addWindowListener(windowListener);
+                this.addWindowListener(windowListener);
+                editor = (BasicBPMNEditor) E4JBPMN.getEditor();
+
+                // get diagram menu bar and shows option to derive Use Cases
+                JMenuBar menubar = E4JBPMN.getJMenuBar();
+                JMenu fileMenu = ((EditorMenuBar) menubar).getFileMenu();
+                String label = mxResources.get("useCaseMaker", null, "Generate Use Cases");
+                JMenuItem menuItem = new JMenuItem(editor.bind(label, new ImportBPMNGraph(E4JBPMN)));
+                fileMenu.add(menuItem, 3);
+                fileMenu.add(new JPopupMenu.Separator(), 4);
+            }               
+            BPMNController.setMainView(this);
+            E4JBPMN.setVisible(true);
+            this.setVisible(false);
+        } catch(Exception e){
+            StringBuilder sb = new StringBuilder(e.toString());
+            for (StackTraceElement ste : e.getStackTrace()) {
+                sb.append("\n\tat ");
+                sb.append(ste);
+            }
+            String trace = sb.toString();
+            JOptionPane.showMessageDialog(null, trace);
+        }
     }
     
     /**

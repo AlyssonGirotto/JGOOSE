@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="55" failures="0" name="br.unioeste.jgoose.istarml.TelosTest" time="0.39" errors="0" skipped="5">
+<testsuite tests="55" failures="0" name="br.unioeste.jgoose.istarml.TelosTest" time="0.506" errors="0" skipped="5">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files (x86)\Java\jdk1.8.0_51\jre\bin"/>
@@ -29,7 +29,7 @@
     <property name="maven.ext.class.path" value="C:\Program Files\NetBeans 8.1\java\maven-nblib\netbeans-eventspy.jar"/>
     <property name="classworlds.conf" value="C:\Program Files\NetBeans 8.1\java\maven\bin\m2.conf"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files (x86)\Java\jdk1.8.0_51\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\MiKTeX 2.9\miktex/bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Java\jdk1.8.0_45\bin;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64;C:\Play;C:\Program Files\Java\jdk1.8.0_45\bin;C:\MinGW\bin;C:\Program Files (x86)\Heroku\bin;C:\Program Files (x86)\git\cmd;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files (x86)\Skype\Phone\;C:\Users\Alysson Girotto\AppData\Local\Microsoft\WindowsApps;;."/>
+    <property name="java.library.path" value="C:\Program Files (x86)\Java\jdk1.8.0_51\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\MiKTeX 2.9\miktex/bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Java\jdk1.8.0_45\bin;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64;C:\Play;C:\Program Files\Java\jdk1.8.0_45\bin;C:\MinGW\bin;C:\Program Files (x86)\Heroku\bin;C:\Program Files (x86)\git\cmd;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files (x86)\Skype\Phone\;%MINGW_DIR%\bin;C:\Users\Alysson Girotto\AppData\Local\Microsoft\WindowsApps;;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="52.0"/>
     <property name="sun.management.compiler" value="HotSpot Client Compiler"/>
@@ -61,69 +61,69 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86"/>
   </properties>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[0]" time="0.033"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[0]" time="0"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[0]" time="0"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[0]" time="0">
-    <skipped/>
-  </testcase>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[0]" time="0"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[0]" time="0.023"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[0]" time="0"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countActors[0]" time="0"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[0]" time="0.004"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[0]" time="0.003"/>
   <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAgents[0]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[0]" time="0.002"/>
   <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[0]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countActors[0]" time="0.004"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[0]" time="0.003"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[0]" time="0.002"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[0]" time="0.003">
+    <skipped/>
+  </testcase>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[0]" time="0.002"/>
   <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countIsPartOf[0]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[1]" time="0.034"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[1]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[1]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[1]" time="0.002">
-    <skipped/>
-  </testcase>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[1]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAgents[1]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[1]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[1]" time="0.002"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[1]" time="0.026"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[1]" time="0.001"/>
   <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countActors[1]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[1]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countIsPartOf[1]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[2]" time="0.03"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[2]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[2]" time="0.01"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[2]" time="0.01">
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[1]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[1]" time="0.002"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAgents[1]" time="0.003"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[1]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[1]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[1]" time="0.001">
     <skipped/>
   </testcase>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[2]" time="0"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAgents[2]" time="0"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[2]" time="0"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[2]" time="0"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countActors[2]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[2]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countIsPartOf[2]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[3]" time="0.03"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[3]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[3]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[3]" time="0.002">
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[1]" time="0.002"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countIsPartOf[1]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[2]" time="0.018"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[2]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countActors[2]" time="0"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[2]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[2]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAgents[2]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[2]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[2]" time="0.002"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[2]" time="0.002">
     <skipped/>
   </testcase>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[3]" time="0.004"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAgents[3]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[3]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[3]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[2]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countIsPartOf[2]" time="0"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[3]" time="0.011"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[3]" time="0.002"/>
   <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countActors[3]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[3]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countIsPartOf[3]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[4]" time="0.006"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[4]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[4]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[4]" time="0.001">
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[3]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[3]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAgents[3]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[3]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[3]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[3]" time="0.001">
     <skipped/>
   </testcase>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[4]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[3]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countIsPartOf[3]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countISA[4]" time="0.129"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countINS[4]" time="0.006"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countActors[4]" time="0"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[4]" time="0.003"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countOccupies[4]" time="0.002"/>
   <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAgents[4]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countCovers[4]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[4]" time="0.002"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countActors[4]" time="0.001"/>
-  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[4]" time="0.001"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countRoles[4]" time="0.003"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPosition[4]" time="0.003"/>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countAllElements[4]" time="0.003">
+    <skipped/>
+  </testcase>
+  <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countPlays[4]" time="0.002"/>
   <testcase classname="br.unioeste.jgoose.istarml.TelosTest" name="countIsPartOf[4]" time="0.002"/>
 </testsuite>

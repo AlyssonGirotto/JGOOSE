@@ -83,12 +83,12 @@ public class AboutDialogView extends JDialog {
         content.add(new JLabel("Center of Exact Sciences and Technology"));
         content.add(new JLabel("College of Computer Science"));
         content.add(new JLabel(" "));
+        content.add(new JLabel("Development of the E4J BPMN and BP2UC by:"));
+        content.add(new JLabel("   Alysson Nathan Girotto"));
         content.add(new JLabel("Development of the 2013 Version by:"));
         content.add(new JLabel("   Diego Peliser"));
-        content.add(new JLabel(" "));
         content.add(new JLabel("Development of the 2011 Version by:"));
         content.add(new JLabel("   Mauro Brischke"));
-        content.add(new JLabel(" "));
         content.add(new JLabel("Development by:"));
         content.add(new JLabel("   André Abe Vicente"));
         content.add(new JLabel(" "));

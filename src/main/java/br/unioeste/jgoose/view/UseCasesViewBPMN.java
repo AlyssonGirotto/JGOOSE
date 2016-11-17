@@ -2,10 +2,12 @@ package br.unioeste.jgoose.view;
 
 import br.unioeste.jgoose.UseCases.Actor;
 import br.unioeste.jgoose.controller.BPMNController;
+import br.unioeste.jgoose.controller.Controller;
 import br.unioeste.jgoose.controller.EditorWindowListener;
 import br.unioeste.jgoose.e4j.filters.ShapeFilenameFilter;
 import br.unioeste.jgoose.e4j.swing.BasicUseCasesEditor;
 import br.unioeste.jgoose.e4j.swing.EditorJFrame;
+import br.unioeste.jgoose.model.FiltroDOC;
 import br.unioeste.jgoose.model.UCActor;
 import br.unioeste.jgoose.model.UCUseCase;
 import br.unioeste.jgoose.util.IStarUtils;
@@ -18,13 +20,16 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -124,6 +129,15 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
         }
     }
 
+    private void insertStyleSave(String text, SimpleAttributeSet style) {
+        Document doc = textUseCasesSave.getStyledDocument();
+        try {
+            doc.insertString(doc.getLength(), text, style);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(UseCasesViewBPMN.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void tabelUseCasesValueChanged(ListSelectionEvent evt) {
 
         buttonDelete.setEnabled(true);
@@ -131,7 +145,7 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
         
         int linha = tabelUseCases.getSelectedRow();
         if (linha != -1) {
-            labelCasosDeUso.setText("Especificação do Caso de Uso");
+            labelCasosDeUso.setText("Use Case Specification");
             textUseCases.setText(""); // limpa o painel de texto
             
             // define o objeto com formatação negrito negrito
@@ -141,48 +155,50 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
             // insere os dados do caso de uso selecionado
             UCUseCase useCase = BPMNController.getUseCases().get(linha);
             
-            insertStyle("Caso de Uso: ", negrito);
-            insertStyle(useCase.getDescription().getName() +  "\n\n", null);
+            insertStyle("Use Case", negrito);
+            insertStyle(": " + useCase.getDescription().getName() +  "\n\n", null);
             
-            insertStyle("INFORMAÇÃO CARACTERÍSTICA\n", negrito);
-            insertStyle("	Objetivo no contexto: ", negrito);
-            insertStyle(useCase.getDescription().getGoal() + "\n", null);
-            insertStyle("	Escopo: ", negrito);
-            insertStyle(useCase.getDescription().getScope() + "\n", null);
-            insertStyle("	Pré-condições: ", negrito);
-            insertStyle(useCase.getDescription().getPreConditions() +  "\n", null);
-            insertStyle("	Condição Final de Sucesso: ", negrito);
-            insertStyle(useCase.getDescription().getEndSucess() +  "\n", null);
-            insertStyle("	Condição Final de Falha: ", negrito);
-            insertStyle(useCase.getDescription().getEndFailure() + "\n", null);
-            insertStyle("	Gatilho: ", negrito);
-            insertStyle(useCase.getDescription().getTrigger() + "\n", null);
-            insertStyle("	Ator primário: ", negrito);
-            insertStyle(useCase.getDescription().getPrimaryActor() + "\n", null);
+            insertStyle("CHARACTERISTIC INFORMATION\n", negrito);
+            insertStyle("	Goal in Context", negrito);
+            insertStyle(": " + useCase.getDescription().getGoal() + "\n", null);
+            insertStyle("	Scope", negrito);
+            insertStyle(": " + useCase.getDescription().getScope() + "\n", null);
+            insertStyle("	Preconditions", negrito);
+            insertStyle(": " + useCase.getDescription().getPreConditions() +  "\n", null);
+            insertStyle("	Success End Condition", negrito);
+            insertStyle(": " + useCase.getDescription().getEndSucess() +  "\n", null);
+            insertStyle("	Failed End Condition", negrito);
+            insertStyle(": " + useCase.getDescription().getEndFailure() + "\n", null);
+            insertStyle("	Trigger", negrito);
+            insertStyle(": " + useCase.getDescription().getTrigger() + "\n", null);
+            insertStyle("	Primary actor", negrito);
+            insertStyle(": " + useCase.getDescription().getPrimaryActor() + "\n", null);
             
-            insertStyle("\nCENÁRIO PRINCIPAL DE SUCESSO\n", negrito);  
+            insertStyle("\nMAIN SUCCESS SCENARIO\n", negrito);  
             int i = 1;
             for(String sentence : useCase.getDescription().getScenario()){
                 insertStyle("<passo " + i++ + "> - " + sentence + "\n", null);
             }
+            insertStyle("\n", null);
             
-            insertStyle("\nEXTENSÕES\n", negrito);  
+            insertStyle("EXTENSIONS\n", negrito);              
+            insertStyle("\n", null);
             
-            insertStyle("\nINFORMAÇÃO RELACIONADA\n", negrito);                        
-            insertStyle("	Prioridade: ", negrito);
-            insertStyle(useCase.getDescription().getPriority()+ "\n", null);
-            insertStyle("	Desempenho alvo: ", negrito);
-            insertStyle(useCase.getDescription().getPerformance()+ "\n", null);
-            insertStyle("	Frequência: ", negrito);
-            insertStyle(useCase.getDescription().getFrequency()+ "\n", null);
-            insertStyle("	Caso de Uso pai: ", negrito);
-            insertStyle(useCase.getDescription().getUseCaseFather() + "\n", null);
-            insertStyle("	Casos de Uso incluídos: ", negrito);
-            insertStyle(useCase.getDescription().getIncludedUseCases()+ "\n", null);
-            insertStyle("	Atores secundários: ", negrito);
-            insertStyle(useCase.getDescription().getSecondaryActors()+ "\n", null);
-            insertStyle("	Informação adicional: ", negrito);
-            insertStyle(useCase.getDescription().getAdditionalInformation()+ "\n", null);                                  
+            insertStyle("RELATED INFORMATION\n", negrito);                        
+            insertStyle("	Priority", negrito);
+            insertStyle(": " + useCase.getDescription().getPriority()+ "\n", null);
+            insertStyle("	Target performance", negrito);
+            insertStyle(": " + useCase.getDescription().getPerformance()+ "\n", null);
+            insertStyle("	Frequency", negrito);
+            insertStyle(": " + useCase.getDescription().getFrequency()+ "\n", null);
+            insertStyle("	Use Case father", negrito);
+            insertStyle(": " + useCase.getDescription().getUseCaseFather() + "\n", null);
+            insertStyle("	Included Use Cases", negrito);
+            insertStyle(": " + useCase.getDescription().getIncludedUseCases()+ "\n", null);
+            insertStyle("	Secondary actors", negrito);
+            insertStyle(": " + useCase.getDescription().getSecondaryActors()+ "\n", null);
+            insertStyle("	Additional information", negrito);
+            insertStyle(": " + useCase.getDescription().getAdditionalInformation()+ "\n", null);                                  
         } else {
             textUseCases.setText("");
         }
@@ -191,12 +207,10 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
     /**
      * Abre uma janela GuidelinesDialogView
      */
-    private void showGuidelinesDialog() {
-        JOptionPane.showMessageDialog(null, "Not implemented yet");
-        /*
+    private void showGuidelinesDialog() {        
         GuidelinesDialogView diretrizes;
         try {
-            diretrizes = new GuidelinesDialogView(this);
+            diretrizes = new GuidelinesDialogView(this, true);
             diretrizes.setModal(true);
 
             int x = this.getX() + (this.getWidth() - diretrizes.getWidth()) / 2;
@@ -207,7 +221,7 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
         } catch (BadLocationException ex) {
             LOG.error(ex);
         }
-        */
+        
     }
 
     /**
@@ -543,7 +557,8 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
     private javax.swing.JTable tabelUseCases;
     private javax.swing.JTextPane textUseCases;
     // End of variables declaration//GEN-END:variables
-
+    private javax.swing.JTextPane textUseCasesSave;
+    
     // Clicou em Mostrar Diagrama de Casos de Uso
     private void showUseCasesDiagram() throws HeadlessException, IOException {
         if (e4jInstance == null) {
@@ -766,8 +781,10 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
     }
 
     private void showSaveUseCases() {
-        JOptionPane.showMessageDialog(null, "Not implemented yet");
-        /*
+        if(textUseCasesSave == null)
+            textUseCasesSave = new JTextPane();
+        
+        textUseCasesSave.setText("");
         buttonDelete.setEnabled(false);
         String path = Controller.loadProperties();
         JFileChooser fileChooser = new JFileChooser(path);
@@ -780,85 +797,69 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
             try {
                 File file = fileChooser.getSelectedFile();
                 try (FileWriter writer = new FileWriter(file.getPath() + ".doc", true)) {
-                    for (Actor actor : Controller.getUseCases()) {
-                        for (UseCase caso : actor.getUseCases()) {
-                            writer.write("Use Case: " + caso.getName() + "\n\n"
-                                    + "CHARACTERISTIC INFORMATION\n"
-                                    + "	Goal in Context:\n"
-                                    + "	Scope:\n"
-                                    + "	Preconditions:\n"
-                                    + "	Success End Condition:\n"
-                                    + "	Failed End Condition:\n"
-                                    + "	Primary Actor: " + actor.getName() + "\n"
-                                    + "\nMAIN SUCESS SCENARIO\n");
-                            if (caso.getSteps().isEmpty()) {
-                                writer.write("	1. Description Step 1 [<< include >> optional]\n"
-                                        + "	2. Description Step 2 [<< include >> optional]\n"
-                                        + "	3. Description Step 3 [<< include >> optional]\n"
-                                        + "\nEXTENSIONS\n"
-                                        + "	2.1. Extension Step 2 << extend >>\n"
-                                        + "	2.2. Extension Step 2 << extend >>\n"
-                                        + "	3.1. Extension Step 3 << extend >>\n");
-                            } else {
-                                int cont = 1;
-                                int n = caso.getSteps().size();
-                                Step step;
-                                for (int i = n - 1; i >= 0; i--) {
-                                    step = caso.getSteps().get(i);
-                                    String name = step.getName().replaceAll("\"", "");
-                                    if (step.isInclude()) {
-                                        name += " << include >> ";
-                                    }
-                                    if (step.getExtends().isEmpty()) {
-                                        if (step.isInclude()) {
-                                            name += " << include >> ";
-                                        }
-                                        writer.write("	" + cont++ + ". " + name + "\n");
-                                    } else {
-                                        int m = step.getExtends().size() - 1;
-                                        name += " " + step.getExtend(m).getName().replaceAll("\"", "");
-                                        if (step.isInclude()) {
-                                            name += " << include >> ";
-                                        }
-                                        writer.write("	" + cont++ + ". " + name + "\n");
-                                    }
-                                }
-                                writer.write("\nEXTENSIONS\n");
-                                int aux = caso.getSteps().size();
-                                cont = 1;
-                                for (int i = n - 1; i >= 0; i--) {
-                                    step = caso.getSteps().get(i);
-                                    Extend extend;
-                                    n = step.getExtends().size();
-                                    if (n < 2) {
-                                        aux--;
-                                    } else {
-                                        for (int j = n - 2; j >= 0; j--) {
-                                            extend = step.getExtend(j);
-                                            writer.write("	" + cont + "." + (n - j - 1) + "." + extend.getName().replaceAll("\"", "") + " << extend >>\n");
-                                        }
-                                    }
-                                    cont++;
-                                    if (aux == 0) {
-                                        writer.write("	2.1. Extension Step 2 << extend >>\n"
-                                                + "	2.2. Extension Step 2 << extend >>\n"
-                                                + "	3.1. Extension Step 3 << extend >>\n");
-                                    }
-                                }
-                            }
+                    
+                    // define o objeto com formatação negrito negrito
+                    SimpleAttributeSet negrito = new SimpleAttributeSet();
+                    StyleConstants.setBold(negrito, true);    
+                    
+                    // insere os dados dos casos de uso
+                    for(UCUseCase useCase : BPMNController.getUseCases()){
+                        textUseCasesSave.setText("");
+                        insertStyleSave("\nUse Case", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getName() +  "\n\n", null);
+
+                        insertStyleSave("CHARACTERISTIC INFORMATION\n", negrito);
+                        insertStyleSave("	Goal in Context", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getGoal() + "\n", null);
+                        insertStyleSave("	Scope", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getScope() + "\n", null);
+                        insertStyleSave("	Preconditions", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getPreConditions() +  "\n", null);
+                        insertStyleSave("	Success End Condition", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getEndSucess() +  "\n", null);
+                        insertStyleSave("	Failed End Condition", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getEndFailure() + "\n", null);
+                        insertStyleSave("	Trigger", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getTrigger() + "\n", null);
+                        insertStyleSave("	Primary actor", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getPrimaryActor() + "\n", null);
+
+                        insertStyleSave("\nMAIN SUCCESS SCENARIO\n", negrito);  
+                        int i = 1;
+                        for(String sentence : useCase.getDescription().getScenario()){
+                            insertStyleSave("<passo " + i++ + "> - " + sentence + "\n", null);
                         }
+                        insertStyleSave("\n", null);
+
+                        insertStyleSave("EXTENSIONS\n", negrito);              
+                        insertStyleSave("\n", null);
+                        insertStyleSave("	Priority", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getPriority()+ "\n", null);
+                        insertStyleSave("	Target performance", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getPerformance()+ "\n", null);
+                        insertStyleSave("	Frequency", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getFrequency()+ "\n", null);
+                        insertStyleSave("	Use Case father", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getUseCaseFather() + "\n", null);
+                        insertStyleSave("	Included Use Cases", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getIncludedUseCases()+ "\n", null);
+                        insertStyleSave("	Secondary actors", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getSecondaryActors()+ "\n", null);
+                        insertStyleSave("	Additional information", negrito);
+                        insertStyleSave(": " + useCase.getDescription().getAdditionalInformation()+ "\n", null);      
+                        
+                        writer.write(textUseCasesSave.getText());
                     }
+                    
+                    JOptionPane.showMessageDialog(null, "File generated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(UseCasesViewBPMN.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-*/
     }
 
-    private void saveDescription() {
-        JOptionPane.showMessageDialog(null, "Not implemented yet");
-        /**
+    private void saveDescription() {       
         buttonDelete.setEnabled(false);
         String path = Controller.loadProperties();
         JFileChooser fileChooser = new JFileChooser(path);
@@ -873,9 +874,10 @@ public class UseCasesViewBPMN extends javax.swing.JFrame {
                 try (FileWriter writer = new FileWriter(file.getPath() + ".doc", true)) {
                     writer.write(textUseCases.getText());
                 }
+                JOptionPane.showMessageDialog(null, "File generated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 Logger.getLogger(UseCasesViewBPMN.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }*/
+        }
     }
 }
